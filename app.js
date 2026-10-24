@@ -763,6 +763,34 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
+    // 2. Suite Category Filter Controls
+    const catPillBtns = document.querySelectorAll('.cat-pill-btn');
+    catPillBtns.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const cat = pill.getAttribute('data-cat');
+        catPillBtns.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+
+        let firstVisibleBtn = null;
+        let isCurrentActiveVisible = false;
+
+        toolTabBtns.forEach(btn => {
+          const btnCat = btn.getAttribute('data-category');
+          if (cat === 'all' || btnCat === cat) {
+            btn.style.display = 'flex';
+            if (!firstVisibleBtn) firstVisibleBtn = btn;
+            if (btn.classList.contains('active')) isCurrentActiveVisible = true;
+          } else {
+            btn.style.display = 'none';
+          }
+        });
+
+        if (!isCurrentActiveVisible && firstVisibleBtn) {
+          firstVisibleBtn.click();
+        }
+      });
+    });
+
     // ------------------------------------------------------------------
     // TOOL 1: Guidance Value, Stamp Duty & Section 50C Engine
     // ------------------------------------------------------------------
@@ -1803,11 +1831,354 @@ document.addEventListener('DOMContentLoaded', () => {
       if (el) el.addEventListener('change', updatePropTaxCalculator);
     });
 
+    // ------------------------------------------------------------------
+    // TOOL 8: Home Loan EMI & Statutory Tax Shield Matrix
+    // ------------------------------------------------------------------
+    const hlLoanAmt = document.getElementById('hlLoanAmt');
+    const hlLoanAmtNum = document.getElementById('hlLoanAmtNum');
+    const hlLoanAmtTxt = document.getElementById('hlLoanAmtTxt');
+    const hlLenderPreset = document.getElementById('hlLenderPreset');
+    const hlInterestRate = document.getElementById('hlInterestRate');
+    const hlInterestRateTxt = document.getElementById('hlInterestRateTxt');
+    const hlTenure = document.getElementById('hlTenure');
+    const hlTenureTxt = document.getElementById('hlTenureTxt');
+    const hlTaxSlab = document.getElementById('hlTaxSlab');
+    const hlPropertyStatus = document.getElementById('hlPropertyStatus');
+
+    const hlNetEmiPayout = document.getElementById('hlNetEmiPayout');
+    const hlNetEmiSub = document.getElementById('hlNetEmiSub');
+    const hlAnnualTaxSavedTxt = document.getElementById('hlAnnualTaxSavedTxt');
+    const hlAnnualTaxSavedAmt = document.getElementById('hlAnnualTaxSavedAmt');
+    const hlLifetimeTaxSavedAmt = document.getElementById('hlLifetimeTaxSavedAmt');
+    const hlGrossEmi = document.getElementById('hlGrossEmi');
+    const hlSec24Amt = document.getElementById('hlSec24Amt');
+    const hlSec24TaxTxt = document.getElementById('hlSec24TaxTxt');
+    const hlSec80cAmt = document.getElementById('hlSec80cAmt');
+    const hlSec80cTaxTxt = document.getElementById('hlSec80cTaxTxt');
+    const hlTotalInterest = document.getElementById('hlTotalInterest');
+
+    function syncHlLoanAmt(val) {
+      const num = Math.max(500000, Math.min(100000000, parseFloat(val) || 7500000));
+      if (hlLoanAmt) hlLoanAmt.value = Math.min(50000000, num);
+      if (hlLoanAmtNum) hlLoanAmtNum.value = num;
+      if (hlLoanAmtTxt) hlLoanAmtTxt.textContent = formatINR(num);
+    }
+
+    function updateHomeLoanCalculator() {
+      if (!hlLoanAmt || !hlNetEmiPayout) return;
+
+      const p = parseFloat(hlLoanAmtNum ? hlLoanAmtNum.value : (hlLoanAmt ? hlLoanAmt.value : 7500000)) || 7500000;
+      const annualRate = parseFloat(hlInterestRate ? hlInterestRate.value : 8.50) || 8.50;
+      const tenureYrs = parseFloat(hlTenure ? hlTenure.value : 20) || 20;
+      const taxSlab = parseFloat(hlTaxSlab ? hlTaxSlab.value : 0.312) || 0.312;
+      const propStatus = hlPropertyStatus ? hlPropertyStatus.value : 'self';
+
+      const r = (annualRate / 100) / 12;
+      const n = tenureYrs * 12;
+
+      let emi = 0;
+      if (r > 0 && n > 0) {
+        emi = Math.round((p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1));
+      }
+      const totalPayment = emi * n;
+      const totalInterest = Math.max(0, totalPayment - p);
+
+      const yr1Interest = Math.round(p * (annualRate / 100));
+      const yr1Principal = Math.max(0, (emi * 12) - yr1Interest);
+
+      const sec24Eligible = propStatus === 'self' ? Math.min(200000, yr1Interest) : yr1Interest;
+      const sec24TaxSaved = Math.round(sec24Eligible * taxSlab);
+
+      const sec80cEligible = Math.min(150000, yr1Principal);
+      const sec80cTaxSaved = Math.round(sec80cEligible * taxSlab);
+
+      const annualTaxSaved = sec24TaxSaved + sec80cTaxSaved;
+      const monthlyTaxSaved = Math.round(annualTaxSaved / 12);
+      const netMonthlyEmi = Math.max(0, emi - monthlyTaxSaved);
+      const lifetimeTaxSaved = annualTaxSaved * Math.min(tenureYrs, 20);
+
+      if (hlLoanAmtTxt) hlLoanAmtTxt.textContent = formatINR(p);
+      if (hlInterestRateTxt) hlInterestRateTxt.textContent = `${annualRate.toFixed(2)}%`;
+      if (hlTenureTxt) hlTenureTxt.textContent = `${tenureYrs} Years`;
+
+      if (hlNetEmiPayout) hlNetEmiPayout.textContent = `${formatINR(netMonthlyEmi)} / mo`;
+      if (hlNetEmiSub) {
+        hlNetEmiSub.innerHTML = `Gross EMI: ${formatINR(emi)} / mo &bull; Saves ${formatINR(monthlyTaxSaved)}/mo through Section 24(b) &amp; 80C income tax deductions`;
+      }
+      if (hlAnnualTaxSavedTxt) hlAnnualTaxSavedTxt.textContent = `${formatINR(annualTaxSaved)} / yr`;
+      if (hlAnnualTaxSavedAmt) hlAnnualTaxSavedAmt.textContent = formatINR(annualTaxSaved);
+      if (hlLifetimeTaxSavedAmt) hlLifetimeTaxSavedAmt.textContent = formatINR(lifetimeTaxSaved);
+
+      if (hlGrossEmi) hlGrossEmi.textContent = `${formatINR(emi)} / mo`;
+      if (hlSec24Amt) hlSec24Amt.textContent = `${formatINR(sec24Eligible)} / yr`;
+      if (hlSec24TaxTxt) hlSec24TaxTxt.textContent = `Saves ${formatINR(sec24TaxSaved)} in Taxes (${(taxSlab * 100).toFixed(1)}% Slab)`;
+      if (hlSec80cAmt) hlSec80cAmt.textContent = `${formatINR(sec80cEligible)} / yr`;
+      if (hlSec80cTaxTxt) hlSec80cTaxTxt.textContent = `Saves ${formatINR(sec80cTaxSaved)} in Taxes`;
+      if (hlTotalInterest) hlTotalInterest.textContent = formatINR(totalInterest);
+    }
+
+    if (hlLoanAmt) {
+      hlLoanAmt.addEventListener('input', () => {
+        syncHlLoanAmt(hlLoanAmt.value);
+        updateHomeLoanCalculator();
+      });
+    }
+
+    if (hlLoanAmtNum) {
+      hlLoanAmtNum.addEventListener('input', () => {
+        syncHlLoanAmt(hlLoanAmtNum.value);
+        updateHomeLoanCalculator();
+      });
+    }
+
+    if (hlLenderPreset) {
+      hlLenderPreset.addEventListener('change', () => {
+        if (hlLenderPreset.value !== 'custom') {
+          if (hlInterestRate) hlInterestRate.value = hlLenderPreset.value;
+          updateHomeLoanCalculator();
+        }
+      });
+    }
+
+    if (hlInterestRate) {
+      hlInterestRate.addEventListener('input', () => {
+        if (hlLenderPreset) hlLenderPreset.value = 'custom';
+        updateHomeLoanCalculator();
+      });
+    }
+
+    if (hlTenure) {
+      hlTenure.addEventListener('input', updateHomeLoanCalculator);
+    }
+
+    [hlTaxSlab, hlPropertyStatus].forEach(el => {
+      if (el) el.addEventListener('change', updateHomeLoanCalculator);
+    });
+
+    // ------------------------------------------------------------------
+    // TOOL 9: Micro-Market Net Rental Yield & Society Maintenance ROI Benchmark
+    // ------------------------------------------------------------------
+    const ryMarketPreset = document.getElementById('ryMarketPreset');
+    const ryArea = document.getElementById('ryArea');
+    const ryAreaNum = document.getElementById('ryAreaNum');
+    const ryAreaTxt = document.getElementById('ryAreaTxt');
+    const ryCapitalCost = document.getElementById('ryCapitalCost');
+    const ryCapitalCostTxt = document.getElementById('ryCapitalCostTxt');
+    const ryMonthlyRent = document.getElementById('ryMonthlyRent');
+    const ryMonthlyMaint = document.getElementById('ryMonthlyMaint');
+    const ryAnnualTax = document.getElementById('ryAnnualTax');
+    const ryVacancyMonths = document.getElementById('ryVacancyMonths');
+
+    const ryNetYieldVal = document.getElementById('ryNetYieldVal');
+    const ryNetYieldSub = document.getElementById('ryNetYieldSub');
+    const ryGrossRentAmt = document.getElementById('ryGrossRentAmt');
+    const ryTotalOpexAmt = document.getElementById('ryTotalOpexAmt');
+    const ryAnnualMaintAmt = document.getElementById('ryAnnualMaintAmt');
+    const ryVacancyLossAmt = document.getElementById('ryVacancyLossAmt');
+    const ryPropTaxAmt = document.getElementById('ryPropTaxAmt');
+    const rySec24ShieldAmt = document.getElementById('rySec24ShieldAmt');
+
+    const rentalPresetData = {
+      blr_ind: { rentSqft: 65, maintSqft: 5.50, costSqft: 14000, tax: 12500 },
+      blr_white: { rentSqft: 45, maintSqft: 4.50, costSqft: 9500, tax: 9500 },
+      mum_bandra: { rentSqft: 140, maintSqft: 10.00, costSqft: 42000, tax: 28000 },
+      mum_powai: { rentSqft: 75, maintSqft: 6.50, costSqft: 22000, tax: 16000 },
+      del_golf: { rentSqft: 50, maintSqft: 5.00, costSqft: 15000, tax: 14000 },
+      del_noida: { rentSqft: 30, maintSqft: 3.50, costSqft: 7800, tax: 7500 },
+      hyd_hitec: { rentSqft: 38, maintSqft: 3.80, costSqft: 8200, tax: 8000 },
+      pun_kharadi: { rentSqft: 32, maintSqft: 3.50, costSqft: 7800, tax: 7500 }
+    };
+
+    function syncRyArea(val) {
+      const num = Math.max(200, Math.min(10000, parseFloat(val) || 1400));
+      if (ryArea) ryArea.value = Math.min(5000, num);
+      if (ryAreaNum) ryAreaNum.value = num;
+      if (ryAreaTxt) ryAreaTxt.textContent = `${Number(num).toLocaleString('en-IN')} sq.ft`;
+    }
+
+    function applyRentalPreset(presetKey) {
+      const p = rentalPresetData[presetKey];
+      if (!p) return;
+      const area = parseFloat(ryAreaNum ? ryAreaNum.value : 1400) || 1400;
+      if (ryCapitalCost) ryCapitalCost.value = area * p.costSqft;
+      if (ryMonthlyRent) ryMonthlyRent.value = Math.round(area * p.rentSqft);
+      if (ryMonthlyMaint) ryMonthlyMaint.value = Math.round(area * p.maintSqft);
+      if (ryAnnualTax) ryAnnualTax.value = p.tax;
+    }
+
+    function updateRentalYieldCalculator() {
+      if (!ryNetYieldVal) return;
+
+      const area = parseFloat(ryAreaNum ? ryAreaNum.value : (ryArea ? ryArea.value : 1400)) || 1400;
+      const capitalCost = parseFloat(ryCapitalCost ? ryCapitalCost.value : 19600000) || 19600000;
+      const monthlyRent = parseFloat(ryMonthlyRent ? ryMonthlyRent.value : 91000) || 91000;
+      const monthlyMaint = parseFloat(ryMonthlyMaint ? ryMonthlyMaint.value : 7700) || 7700;
+      const annualTax = parseFloat(ryAnnualTax ? ryAnnualTax.value : 12500) || 12500;
+      const vacancyMonths = parseFloat(ryVacancyMonths ? ryVacancyMonths.value : 1.0) || 1.0;
+
+      const grossAnnualRent = monthlyRent * 12;
+      const vacancyLoss = Math.round(monthlyRent * vacancyMonths);
+      const annualMaint = monthlyMaint * 12;
+      const totalOpex = annualMaint + annualTax + vacancyLoss;
+
+      const netAnnualInflow = Math.max(0, grossAnnualRent - totalOpex);
+      const grossYield = capitalCost > 0 ? (grossAnnualRent / capitalCost) * 100 : 0;
+      const netYield = capitalCost > 0 ? (netAnnualInflow / capitalCost) * 100 : 0;
+      const sec24Shield = Math.round(Math.max(0, grossAnnualRent - annualTax) * 0.30);
+
+      if (ryAreaTxt) ryAreaTxt.textContent = `${Number(area).toLocaleString('en-IN')} sq.ft`;
+      if (ryCapitalCostTxt) ryCapitalCostTxt.textContent = formatINR(capitalCost);
+
+      if (ryNetYieldVal) ryNetYieldVal.textContent = `${netYield.toFixed(2)}% Net Yield`;
+      if (ryNetYieldSub) {
+        ryNetYieldSub.textContent = `Advertised Gross Yield: ${grossYield.toFixed(2)}% • Net Annual Cash Inflow: ${formatINR(netAnnualInflow)} / yr`;
+      }
+      if (ryGrossRentAmt) ryGrossRentAmt.textContent = `${formatINR(grossAnnualRent)} / yr`;
+      if (ryTotalOpexAmt) ryTotalOpexAmt.textContent = `${formatINR(totalOpex)} / yr`;
+
+      if (ryAnnualMaintAmt) ryAnnualMaintAmt.textContent = `${formatINR(annualMaint)} / yr`;
+      if (ryVacancyLossAmt) ryVacancyLossAmt.textContent = formatINR(vacancyLoss);
+      if (ryPropTaxAmt) ryPropTaxAmt.textContent = `${formatINR(annualTax)} / yr`;
+      if (rySec24ShieldAmt) rySec24ShieldAmt.textContent = formatINR(sec24Shield);
+    }
+
+    if (ryMarketPreset) {
+      ryMarketPreset.addEventListener('change', () => {
+        if (ryMarketPreset.value !== 'custom') {
+          applyRentalPreset(ryMarketPreset.value);
+        }
+        updateRentalYieldCalculator();
+      });
+    }
+
+    if (ryArea) {
+      ryArea.addEventListener('input', () => {
+        syncRyArea(ryArea.value);
+        const presetKey = ryMarketPreset ? ryMarketPreset.value : 'blr_ind';
+        if (presetKey !== 'custom') applyRentalPreset(presetKey);
+        updateRentalYieldCalculator();
+      });
+    }
+
+    if (ryAreaNum) {
+      ryAreaNum.addEventListener('input', () => {
+        syncRyArea(ryAreaNum.value);
+        const presetKey = ryMarketPreset ? ryMarketPreset.value : 'blr_ind';
+        if (presetKey !== 'custom') applyRentalPreset(presetKey);
+        updateRentalYieldCalculator();
+      });
+    }
+
+    [ryCapitalCost, ryMonthlyRent, ryMonthlyMaint, ryAnnualTax, ryVacancyMonths].forEach(el => {
+      if (el) {
+        el.addEventListener('input', () => {
+          if (ryMarketPreset && el !== ryVacancyMonths) ryMarketPreset.value = 'custom';
+          updateRentalYieldCalculator();
+        });
+        el.addEventListener('change', updateRentalYieldCalculator);
+      }
+    });
+
+    // ------------------------------------------------------------------
+    // TOOL 10: Joint Development Agreement (JDA) & Section 45(5A) Estimator
+    // ------------------------------------------------------------------
+    const jdaLandExtent = document.getElementById('jdaLandExtent');
+    const jdaLandExtentTxt = document.getElementById('jdaLandExtentTxt');
+    const jdaUnitType = document.getElementById('jdaUnitType');
+    const jdaFarVal = document.getElementById('jdaFarVal');
+    const jdaSharingRatio = document.getElementById('jdaSharingRatio');
+    const jdaSharingRatioTxt = document.getElementById('jdaSharingRatioTxt');
+    const jdaUpfrontDeposit = document.getElementById('jdaUpfrontDeposit');
+    const jdaProjectedRate = document.getElementById('jdaProjectedRate');
+    const jdaOriginalCost = document.getElementById('jdaOriginalCost');
+    const jdaOriginalCostTxt = document.getElementById('jdaOriginalCostTxt');
+
+    const jdaTotalRealizable = document.getElementById('jdaTotalRealizable');
+    const jdaRealizableSub = document.getElementById('jdaRealizableSub');
+    const jdaGrossCashAmt = document.getElementById('jdaGrossCashAmt');
+    const jdaConstructedAreaTxt = document.getElementById('jdaConstructedAreaTxt');
+    const jdaConstructedValAmt = document.getElementById('jdaConstructedValAmt');
+    const jdaTotalDevelopable = document.getElementById('jdaTotalDevelopable');
+    const jdaDeveloperArea = document.getElementById('jdaDeveloperArea');
+    const jdaTdsWithheld = document.getElementById('jdaTdsWithheld');
+    const jdaLtcgTaxAmt = document.getElementById('jdaLtcgTaxAmt');
+
+    function formatCr(val) {
+      if (val >= 10000000) {
+        return `₹${(val / 10000000).toFixed(2)} Cr`;
+      }
+      return formatINR(val);
+    }
+
+    function updateJdaCalculator() {
+      if (!jdaTotalRealizable) return;
+
+      const landExtent = parseFloat(jdaLandExtent ? jdaLandExtent.value : 1.0) || 1.0;
+      const unit = jdaUnitType ? jdaUnitType.value : 'acre';
+      const far = parseFloat(jdaFarVal ? jdaFarVal.value : 2.50) || 2.50;
+      const sharingPct = parseFloat(jdaSharingRatio ? jdaSharingRatio.value : 40) || 40;
+      const upfrontCash = parseFloat(jdaUpfrontDeposit ? jdaUpfrontDeposit.value : 10000000) || 10000000;
+      const projectedRate = parseFloat(jdaProjectedRate ? jdaProjectedRate.value : 8500) || 8500;
+      const originalCost = parseFloat(jdaOriginalCost ? jdaOriginalCost.value : 5000000) || 5000000;
+
+      let landAreaSqft = landExtent * 43560;
+      if (unit === 'gunta') landAreaSqft = landExtent * 1089;
+      else if (unit === 'sqft') landAreaSqft = landExtent;
+
+      const totalDevelopable = Math.round(landAreaSqft * far);
+      const landownerArea = Math.round(totalDevelopable * (sharingPct / 100));
+      const developerArea = totalDevelopable - landownerArea;
+
+      const constructedVal = landownerArea * projectedRate;
+      const totalRealizable = constructedVal + upfrontCash;
+
+      const tdsWithheld = Math.round(upfrontCash * 0.10);
+      const deemedConsideration = constructedVal + upfrontCash;
+      const taxableGain = Math.max(0, deemedConsideration - originalCost);
+      const ltcgTax = Math.round(taxableGain * 0.13); // 12.5% LTCG + 4% cess
+
+      if (jdaLandExtentTxt) {
+        jdaLandExtentTxt.textContent = `${landExtent} ${unit === 'acre' ? 'Acre' : (unit === 'gunta' ? 'Guntas' : 'sq.ft')} (${Math.round(landAreaSqft).toLocaleString('en-IN')} sq.ft)`;
+      }
+      if (jdaSharingRatioTxt) jdaSharingRatioTxt.textContent = `${sharingPct}% Share`;
+      if (jdaOriginalCostTxt) jdaOriginalCostTxt.textContent = formatINR(originalCost);
+
+      if (jdaTotalRealizable) jdaTotalRealizable.textContent = formatCr(totalRealizable);
+      if (jdaRealizableSub) {
+        jdaRealizableSub.textContent = `Landowner Built-Up Allocation: ${landownerArea.toLocaleString('en-IN')} sq.ft constructed + ${formatINR(upfrontCash)} upfront monetary cash`;
+      }
+      if (jdaGrossCashAmt) jdaGrossCashAmt.textContent = formatINR(upfrontCash);
+      if (jdaConstructedAreaTxt) jdaConstructedAreaTxt.textContent = `${landownerArea.toLocaleString('en-IN')} sq.ft Allocation`;
+      if (jdaConstructedValAmt) jdaConstructedValAmt.textContent = formatCr(constructedVal);
+
+      if (jdaTotalDevelopable) jdaTotalDevelopable.textContent = `${totalDevelopable.toLocaleString('en-IN')} sq.ft`;
+      if (jdaDeveloperArea) jdaDeveloperArea.textContent = `${developerArea.toLocaleString('en-IN')} sq.ft`;
+      if (jdaTdsWithheld) jdaTdsWithheld.textContent = formatINR(tdsWithheld);
+      if (jdaLtcgTaxAmt) jdaLtcgTaxAmt.textContent = formatCr(ltcgTax);
+    }
+
+    if (jdaSharingRatio) {
+      jdaSharingRatio.addEventListener('input', () => {
+        if (jdaSharingRatioTxt) jdaSharingRatioTxt.textContent = `${jdaSharingRatio.value}% Share`;
+        updateJdaCalculator();
+      });
+    }
+
+    [jdaLandExtent, jdaUnitType, jdaFarVal, jdaUpfrontDeposit, jdaProjectedRate, jdaOriginalCost].forEach(el => {
+      if (el) {
+        el.addEventListener('input', updateJdaCalculator);
+        el.addEventListener('change', updateJdaCalculator);
+      }
+    });
+
     // Initialize all statutory tools
     updateDutyCalculator();
     updateCapGainsCalculator();
     populateZonesForCity('blr');
     updatePropTaxCalculator();
+    updateHomeLoanCalculator();
+    updateRentalYieldCalculator();
+    updateJdaCalculator();
     updateReraDelayCalculator();
     updateSmReitCalculator();
     updateFarFsiCalculator();

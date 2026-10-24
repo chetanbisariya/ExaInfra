@@ -754,62 +754,113 @@
   </section>
 
   <!-- ====================================================================
-       PILLAR 4: INSTITUTIONAL REAL ESTATE & STATUTORY ASSET WORKBENCH (7 HIGH-DEMAND ENGINES)
+       PILLAR 4: INSTITUTIONAL REAL ESTATE & STATUTORY ASSET WORKBENCH (10 SOVEREIGN TOOLS • 4 SUITES)
        ==================================================================== -->
   <section class="tools-section" id="statutory-tools">
     <div class="container">
       <div class="section-header-block">
         <span class="section-tag">SOVEREIGN STATUTORY & COMPUTATIONAL TERMINAL</span>
-        <h2 class="section-title">Institutional Real Estate & Asset Tools</h2>
+        <h2 class="section-title">Institutional Real Estate &amp; Asset Tools</h2>
         <p class="section-desc">
-          High-precision computational models compliant with State Municipal Corporation Acts (BBMP, BMC, MCD, GHMC, GCC, PMC), the Indian Stamp Act 1899, RERA Section 18, Income Tax Act (Sections 54, 50C & 195), SEBI SM REIT Regulations 2024, and National Building Code (NBC 2016).
+          Institutional computational models organized into 4 sovereign suites: <strong>Statutory &amp; Property Taxes</strong>, <strong>Home Loans &amp; Financing</strong>, <strong>Yields &amp; Micro-Market ROI</strong>, and <strong>Plot &amp; Development Compliance</strong>.
         </p>
       </div>
 
       <div class="tools-terminal-card">
 
+      <!-- Categorized Suite Navigation Filter Bar -->
+      <div class="workbench-category-nav" role="tablist" aria-label="Tool Category Filter">
+        <button class="cat-pill-btn active" data-cat="all" type="button">
+          <span>🌐 All Tools (10)</span>
+        </button>
+        <button class="cat-pill-btn" data-cat="taxes" type="button">
+          <span>🏛️ Statutory &amp; Taxes (4)</span>
+        </button>
+        <button class="cat-pill-btn" data-cat="financing" type="button">
+          <span>💳 Loans &amp; Financing (1)</span>
+        </button>
+        <button class="cat-pill-btn" data-cat="yields" type="button">
+          <span>📈 Yields &amp; Investment (2)</span>
+        </button>
+        <button class="cat-pill-btn" data-cat="development" type="button">
+          <span>🏗️ Plot &amp; Development (3)</span>
+        </button>
+      </div>
+
       <!-- Workbench Tool Selector Navigation Tabs -->
       <div class="tools-tab-nav" role="tablist">
-        <button class="tool-tab-btn active" data-tool="duty" role="tab" id="tab-duty" aria-selected="true" aria-controls="panel-duty">
+        <!-- Suite 1: Statutory & Taxes -->
+        <button class="tool-tab-btn active" data-tool="duty" data-category="taxes" role="tab" id="tab-duty" aria-selected="true" aria-controls="panel-duty">
+          <span class="tool-tab-cat-badge">TAX</span>
           <span class="tool-tab-icon">📜</span>
-          <span class="tool-tab-title">Guidance & Stamp Duty</span>
-          <span class="tool-tab-sub">Sub-Registrar & Sec 50C</span>
+          <span class="tool-tab-title">Guidance &amp; Stamp Duty</span>
+          <span class="tool-tab-sub">Sub-Registrar &amp; Sec 50C</span>
         </button>
 
-        <button class="tool-tab-btn" data-tool="capgains" role="tab" id="tab-capgains" aria-selected="false" aria-controls="panel-capgains">
+        <button class="tool-tab-btn" data-tool="capgains" data-category="taxes" role="tab" id="tab-capgains" aria-selected="false" aria-controls="panel-capgains">
+          <span class="tool-tab-cat-badge">TAX</span>
           <span class="tool-tab-icon">🛡️</span>
           <span class="tool-tab-title">Sec 54 Capital Gains</span>
           <span class="tool-tab-sub">Budget 2024 LTCG Shield</span>
         </button>
 
-        <button class="tool-tab-btn" data-tool="proptax" role="tab" id="tab-proptax" aria-selected="false" aria-controls="panel-proptax">
+        <button class="tool-tab-btn" data-tool="proptax" data-category="taxes" role="tab" id="tab-proptax" aria-selected="false" aria-controls="panel-proptax">
+          <span class="tool-tab-cat-badge">TAX</span>
           <span class="tool-tab-icon">🏛️</span>
           <span class="tool-tab-title">Municipal Property Tax</span>
-          <span class="tool-tab-sub">Location SAS & Capital Rates</span>
+          <span class="tool-tab-sub">Location SAS &amp; Capital Rates</span>
         </button>
 
-        <button class="tool-tab-btn" data-tool="rera" role="tab" id="tab-rera" aria-selected="false" aria-controls="panel-rera">
-          <span class="tool-tab-icon">⚖️</span>
-          <span class="tool-tab-title">RERA Delay Penalty</span>
-          <span class="tool-tab-sub">SBI MCLR + 2% Claim</span>
+        <button class="tool-tab-btn" data-tool="nri" data-category="taxes" role="tab" id="tab-nri" aria-selected="false" aria-controls="panel-nri">
+          <span class="tool-tab-cat-badge">TAX</span>
+          <span class="tool-tab-icon">🌐</span>
+          <span class="tool-tab-title">NRI Sale TDS Shield</span>
+          <span class="tool-tab-sub">Sec 195 &amp; Form 13</span>
         </button>
 
-        <button class="tool-tab-btn" data-tool="reit" role="tab" id="tab-reit" aria-selected="false" aria-controls="panel-reit">
+        <!-- Suite 2: Loans & Financing -->
+        <button class="tool-tab-btn" data-tool="homeloan" data-category="financing" role="tab" id="tab-homeloan" aria-selected="false" aria-controls="panel-homeloan">
+          <span class="tool-tab-cat-badge">LOAN</span>
+          <span class="tool-tab-icon">💳</span>
+          <span class="tool-tab-title">Home Loan EMI &amp; Tax</span>
+          <span class="tool-tab-sub">Sec 24(b) + 80C Post-Tax EMI</span>
+        </button>
+
+        <!-- Suite 3: Yields & Investment -->
+        <button class="tool-tab-btn" data-tool="reit" data-category="yields" role="tab" id="tab-reit" aria-selected="false" aria-controls="panel-reit">
+          <span class="tool-tab-cat-badge">CRE</span>
           <span class="tool-tab-icon">🏢</span>
           <span class="tool-tab-title">SM REIT vs Direct CRE</span>
           <span class="tool-tab-sub">SEBI Micro-REIT Yields</span>
         </button>
 
-        <button class="tool-tab-btn" data-tool="far" role="tab" id="tab-far" aria-selected="false" aria-controls="panel-far">
-          <span class="tool-tab-icon">📐</span>
-          <span class="tool-tab-title">FAR / FSI Maximizer</span>
-          <span class="tool-tab-sub">Plot & Setback Bye-Laws</span>
+        <button class="tool-tab-btn" data-tool="rentalyield" data-category="yields" role="tab" id="tab-rentalyield" aria-selected="false" aria-controls="panel-rentalyield">
+          <span class="tool-tab-cat-badge">ROI</span>
+          <span class="tool-tab-icon">📈</span>
+          <span class="tool-tab-title">Net Rental Yield &amp; Maint.</span>
+          <span class="tool-tab-sub">Post-OpEx Real ROI Matrix</span>
         </button>
 
-        <button class="tool-tab-btn" data-tool="nri" role="tab" id="tab-nri" aria-selected="false" aria-controls="panel-nri">
-          <span class="tool-tab-icon">🌐</span>
-          <span class="tool-tab-title">NRI Sale TDS Shield</span>
-          <span class="tool-tab-sub">Sec 195 & Form 13</span>
+        <!-- Suite 4: Plot & Development -->
+        <button class="tool-tab-btn" data-tool="rera" data-category="development" role="tab" id="tab-rera" aria-selected="false" aria-controls="panel-rera">
+          <span class="tool-tab-cat-badge">RERA</span>
+          <span class="tool-tab-icon">⚖️</span>
+          <span class="tool-tab-title">RERA Delay Penalty</span>
+          <span class="tool-tab-sub">SBI MCLR + 2% Claim</span>
+        </button>
+
+        <button class="tool-tab-btn" data-tool="far" data-category="development" role="tab" id="tab-far" aria-selected="false" aria-controls="panel-far">
+          <span class="tool-tab-cat-badge">FAR</span>
+          <span class="tool-tab-icon">📐</span>
+          <span class="tool-tab-title">FAR / FSI Maximizer</span>
+          <span class="tool-tab-sub">Plot &amp; Setback Bye-Laws</span>
+        </button>
+
+        <button class="tool-tab-btn" data-tool="jda" data-category="development" role="tab" id="tab-jda" aria-selected="false" aria-controls="panel-jda">
+          <span class="tool-tab-cat-badge">JDA</span>
+          <span class="tool-tab-icon">🏗️</span>
+          <span class="tool-tab-title">JDA &amp; Sec 45(5A) Estimator</span>
+          <span class="tool-tab-sub">Revenue Share &amp; CC Tax Trigger</span>
         </button>
       </div>
 
@@ -1561,6 +1612,423 @@
                 </div>
               </div>
 
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             PANEL: Home Loan EMI & Statutory Tax Shield Matrix
+             ============================================================ -->
+        <div class="tool-panel" id="panel-homeloan" role="tabpanel" aria-labelledby="tab-homeloan">
+          <div class="tool-grid-layout">
+            <div class="tool-input-col">
+              <div class="tool-card-header">
+                <span class="tool-card-tag">INCOME TAX ACT 1961 &bull; SECTIONS 24(b) &amp; 80C &bull; RBI REPO LINKED</span>
+                <h3 class="tool-card-heading">Home Loan EMI &amp; Statutory Tax Shield Matrix</h3>
+                <p class="tool-card-sub">Model your true net monthly cash outgo after factoring in Section 24(b) (₹2,00,000 interest) and Section 80C (₹1,50,000 principal) tax deductions.</p>
+              </div>
+
+              <!-- Loan Amount Slider & Input -->
+              <div class="tool-form-group">
+                <div class="tool-label-row">
+                  <label for="hlLoanAmt" class="tool-label">Home Loan Principal Amount (₹)</label>
+                  <span id="hlLoanAmtTxt" class="tool-live-badge">₹75,00,000</span>
+                </div>
+                <input type="range" id="hlLoanAmt" class="tool-slider" min="1000000" max="50000000" step="100000" value="7500000">
+                <input type="number" id="hlLoanAmtNum" class="tool-number-input" value="7500000" min="500000" step="50000">
+              </div>
+
+              <!-- Lender Benchmark / Preset -->
+              <div class="tool-form-row">
+                <div class="tool-form-group">
+                  <label for="hlLenderPreset" class="tool-label">Lender Benchmark Rate</label>
+                  <select id="hlLenderPreset" class="tool-select">
+                    <option value="8.35">SBI Regular Home Loan (EBLR: 8.35%)</option>
+                    <option value="8.50" selected>HDFC Bank Prime Lending (8.50%)</option>
+                    <option value="8.75">ICICI Bank Floating (8.75%)</option>
+                    <option value="custom">Custom Interest Rate</option>
+                  </select>
+                </div>
+
+                <div class="tool-form-group">
+                  <div class="tool-label-row">
+                    <label for="hlInterestRate" class="tool-label">Interest Rate (% p.a.)</label>
+                    <span id="hlInterestRateTxt" class="tool-live-badge">8.50%</span>
+                  </div>
+                  <input type="number" id="hlInterestRate" class="tool-number-input" value="8.50" min="6.5" max="15.0" step="0.05">
+                </div>
+              </div>
+
+              <!-- Tenure & Tax Bracket -->
+              <div class="tool-form-row">
+                <div class="tool-form-group">
+                  <div class="tool-label-row">
+                    <label for="hlTenure" class="tool-label">Loan Tenure (Years)</label>
+                    <span id="hlTenureTxt" class="tool-live-badge">20 Years</span>
+                  </div>
+                  <input type="range" id="hlTenure" class="tool-slider" min="5" max="30" step="1" value="20">
+                </div>
+
+                <div class="tool-form-group">
+                  <label for="hlTaxSlab" class="tool-label">Borrower Income Tax Slab</label>
+                  <select id="hlTaxSlab" class="tool-select">
+                    <option value="0.312" selected>30% Slab + Cess (Effective 31.2%)</option>
+                    <option value="0.208">20% Slab + Cess (Effective 20.8%)</option>
+                    <option value="0.0">0% (Exempt / New Regime Default)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Property Status -->
+              <div class="tool-form-group">
+                <label for="hlPropertyStatus" class="tool-label">Property Occupancy Status</label>
+                <select id="hlPropertyStatus" class="tool-select">
+                  <option value="self" selected>Self-Occupied (Statutory Cap ₹2,00,000 on Interest)</option>
+                  <option value="letout">Let-Out / Rented (No Cap on Actual Interest Deduction under Sec 24)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="tool-results-col">
+              <div class="tool-kpi-card highlight">
+                <span class="tool-kpi-label">TRUE NET MONTHLY OUTGO POST-TAX</span>
+                <div id="hlNetEmiPayout" class="tool-kpi-val primary">₹55,868 / mo</div>
+                <div id="hlNetEmiSub" class="tool-kpi-sub">Gross EMI: ₹65,068 / mo &bull; Saves ₹9,200/mo through Section 24(b) &amp; 80C income tax deductions</div>
+              </div>
+
+              <!-- Tax Shield Ribbon -->
+              <div class="tool-regime-card">
+                <div class="regime-col">
+                  <span class="regime-tag" style="background:#ECFDF5; color:#065F46;">ANNUAL TAX SHIELD SAVED</span>
+                  <div class="regime-rate" id="hlAnnualTaxSavedTxt">₹1,09,200 / yr</div>
+                  <div class="regime-sub">Statutory IT Savings:</div>
+                  <strong id="hlAnnualTaxSavedAmt" class="regime-amt" style="color:#059669;">₹1,09,200</strong>
+                </div>
+                <div class="regime-divider">VS</div>
+                <div class="regime-col">
+                  <span class="regime-tag" style="background:#FEE2E2; color:#991B1B;">LIFETIME INTEREST TAX OFFSET</span>
+                  <div class="regime-rate">20-Year Total Shield</div>
+                  <div class="regime-sub">Total Cash Kept:</div>
+                  <strong id="hlLifetimeTaxSavedAmt" class="regime-amt" style="color:#DC2626;">₹21,84,000</strong>
+                </div>
+              </div>
+
+              <!-- 4-Cell Granular Breakdown -->
+              <div class="tool-breakdown-grid">
+                <div class="tool-breakdown-cell">
+                  <span class="tool-cell-label">GROSS MONTHLY EMI</span>
+                  <strong id="hlGrossEmi" class="tool-cell-val">₹65,068</strong>
+                  <span class="tool-cell-sub">Contractual Bank Installment</span>
+                </div>
+                <div class="tool-breakdown-cell">
+                  <span class="tool-cell-label">SEC 24(b) INTEREST DEDUCTION</span>
+                  <strong id="hlSec24Amt" class="tool-cell-val">₹2,00,000 / yr</strong>
+                  <span id="hlSec24TaxTxt" class="tool-cell-sub">Saves ₹62,400 in Taxes</span>
+                </div>
+                <div class="tool-breakdown-cell">
+                  <span class="tool-cell-label">SEC 80C PRINCIPAL DEDUCTION</span>
+                  <strong id="hlSec80cAmt" class="tool-cell-val">₹1,50,000 / yr</strong>
+                  <span id="hlSec80cTaxTxt" class="tool-cell-sub">Saves ₹46,800 in Taxes</span>
+                </div>
+                <div class="tool-breakdown-cell">
+                  <span class="tool-cell-label">TOTAL LIFETIME INTEREST</span>
+                  <strong id="hlTotalInterest" class="tool-cell-val">₹81,16,320</strong>
+                  <span class="tool-cell-sub">Total Interest over 20 Years</span>
+                </div>
+              </div>
+
+              <!-- Co-Borrower Optimization Alert -->
+              <div class="tool-alert-box safe">
+                <div class="tool-alert-header">
+                  <span class="tool-alert-icon">💡</span>
+                  <strong>JOINT HOME LOAN CO-BORROWER MULTIPLIER:</strong>
+                </div>
+                <p class="tool-alert-body" style="font-size:0.84rem;">
+                  If purchasing jointly with a spouse or co-borrower who is a co-owner, both individuals can independently claim up to <strong>₹2,00,000 under Section 24(b)</strong> and <strong>₹1,50,000 under Section 80C</strong>, effectively doubling the household tax shield to <strong>₹7,00,000 / year</strong>!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             PANEL: Micro-Market Net Rental Yield & Society Maintenance ROI Benchmark
+             ============================================================ -->
+        <div class="tool-panel" id="panel-rentalyield" role="tabpanel" aria-labelledby="tab-rentalyield">
+          <div class="tool-grid-layout">
+            <div class="tool-input-col">
+              <div class="tool-card-header">
+                <span class="tool-card-tag">REAL ESTATE LEASING &bull; SECTION 24(a) STATUTORY DEDUCTION &bull; OPEX AUDIT</span>
+                <h3 class="tool-card-heading">Micro-Market Net Rental Yield &amp; Maintenance ROI</h3>
+                <p class="tool-card-sub">Calculate your true post-expense Net Rental Yield by accounting for society maintenance outgo, municipal property tax, and tenant vacancy buffers.</p>
+              </div>
+
+              <!-- Micro-Market Preset Selector -->
+              <div class="tool-form-group">
+                <label for="ryMarketPreset" class="tool-label">Micro-Market Benchmark Preset</label>
+                <select id="ryMarketPreset" class="tool-select">
+                  <option value="blr_ind" selected>Bengaluru — Indiranagar / Koramangala (₹65/sq.ft &bull; Maint: ₹5.50 &bull; Cost: ₹14,000/sq.ft)</option>
+                  <option value="blr_white">Bengaluru — Whitefield / ORR Corridor (₹45/sq.ft &bull; Maint: ₹4.50 &bull; Cost: ₹9,500/sq.ft)</option>
+                  <option value="mum_bandra">Mumbai — Bandra West / Khar (₹140/sq.ft &bull; Maint: ₹10.00 &bull; Cost: ₹42,000/sq.ft)</option>
+                  <option value="mum_powai">Mumbai — Powai / Andheri East (₹75/sq.ft &bull; Maint: ₹6.50 &bull; Cost: ₹22,000/sq.ft)</option>
+                  <option value="del_golf">Delhi NCR — Gurugram Golf Course Ext (₹50/sq.ft &bull; Maint: ₹5.00 &bull; Cost: ₹15,000/sq.ft)</option>
+                  <option value="del_noida">Delhi NCR — Noida Expressway (₹30/sq.ft &bull; Maint: ₹3.50 &bull; Cost: ₹7,800/sq.ft)</option>
+                  <option value="hyd_hitec">Hyderabad — Hitec City / Gachibowli (₹38/sq.ft &bull; Maint: ₹3.80 &bull; Cost: ₹8,200/sq.ft)</option>
+                  <option value="pun_kharadi">Pune — Kharadi / Viman Nagar (₹32/sq.ft &bull; Maint: ₹3.50 &bull; Cost: ₹7,800/sq.ft)</option>
+                  <option value="custom">Custom Property Specification</option>
+                </select>
+              </div>
+
+              <!-- Property Area -->
+              <div class="tool-form-group">
+                <div class="tool-label-row">
+                  <label for="ryArea" class="tool-label">Super Built-up Area (sq. ft)</label>
+                  <span id="ryAreaTxt" class="tool-live-badge">1,400 sq.ft</span>
+                </div>
+                <input type="range" id="ryArea" class="tool-slider" min="500" max="5000" step="50" value="1400">
+                <input type="number" id="ryAreaNum" class="tool-number-input" value="1400" min="200" step="50">
+              </div>
+
+              <!-- Capital Acquisition Cost -->
+              <div class="tool-form-group">
+                <div class="tool-label-row">
+                  <label for="ryCapitalCost" class="tool-label">Total Asset Acquisition Cost (₹)</label>
+                  <span id="ryCapitalCostTxt" class="tool-live-badge">₹1,96,00,000</span>
+                </div>
+                <input type="number" id="ryCapitalCost" class="tool-number-input" value="19600000" min="1000000" step="100000">
+              </div>
+
+              <!-- Monthly Rent & Maintenance -->
+              <div class="tool-form-row">
+                <div class="tool-form-group">
+                  <label for="ryMonthlyRent" class="tool-label">Gross Monthly Rent (₹)</label>
+                  <input type="number" id="ryMonthlyRent" class="tool-number-input" value="91000" min="5000" step="1000">
+                </div>
+
+                <div class="tool-form-group">
+                  <label for="ryMonthlyMaint" class="tool-label">Monthly Society Maintenance (₹)</label>
+                  <input type="number" id="ryMonthlyMaint" class="tool-number-input" value="7700" min="0" step="500">
+                </div>
+              </div>
+
+              <!-- Annual Property Tax & Vacancy -->
+              <div class="tool-form-row">
+                <div class="tool-form-group">
+                  <label for="ryAnnualTax" class="tool-label">Annual Municipal Property Tax (₹)</label>
+                  <input type="number" id="ryAnnualTax" class="tool-number-input" value="12500" min="0" step="500">
+                </div>
+
+                <div class="tool-form-group">
+                  <label for="ryVacancyMonths" class="tool-label">Annual Vacancy Buffer</label>
+                  <select id="ryVacancyMonths" class="tool-select">
+                    <option value="0.5">0.5 Month / Year (Low Turnover)</option>
+                    <option value="1.0" selected>1.0 Month / Year (Standard Re-tenanting)</option>
+                    <option value="1.5">1.5 Months / Year (Moderate Friction)</option>
+                    <option value="2.0">2.0 Months / Year (Extended Vacancy)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="tool-results-col">
+              <div class="tool-kpi-card highlight">
+                <span class="tool-kpi-label">TRUE POST-EXPENSE NET RENTAL YIELD</span>
+                <div id="ryNetYieldVal" class="tool-kpi-val primary">4.53% Net Yield</div>
+                <div id="ryNetYieldSub" class="tool-kpi-sub">Advertised Gross Yield: 5.57% &bull; Net Annual Cash Inflow: ₹8,88,100 / yr</div>
+              </div>
+
+              <!-- Gross vs Net Ribbon -->
+              <div class="tool-regime-card">
+                <div class="regime-col">
+                  <span class="regime-tag" style="background:#ECFDF5; color:#065F46;">GROSS ANNUAL RENT</span>
+                  <div class="regime-rate">Advertised Headline</div>
+                  <div class="regime-sub">Top-Line Collection:</div>
+                  <strong id="ryGrossRentAmt" class="regime-amt" style="color:#059669;">₹10,92,000 / yr</strong>
+                </div>
+                <div class="regime-divider">VS</div>
+                <div class="regime-col">
+                  <span class="regime-tag" style="background:#FEE2E2; color:#991B1B;">ANNUAL OPEX &amp; FRICTION</span>
+                  <div class="regime-rate">Maintenance, Tax &amp; Vacancy</div>
+                  <div class="regime-sub">Total Outgo Drag:</div>
+                  <strong id="ryTotalOpexAmt" class="regime-amt" style="color:#DC2626;">₹2,03,900 / yr</strong>
+                </div>
+              </div>
+
+              <!-- 4-Cell Granular Breakdown -->
+              <div class="tool-breakdown-grid">
+                <div class="tool-breakdown-cell">
+                  <span class="tool-cell-label">SOCIETY MAINTENANCE DRAIN</span>
+                  <strong id="ryAnnualMaintAmt" class="tool-cell-val">₹92,400 / yr</strong>
+                  <span class="tool-cell-sub">8.5% of Gross Rental Inflow</span>
+                </div>
+                <div class="tool-breakdown-cell">
+                  <span class="tool-cell-label">VACANCY LOSS PROVISION</span>
+                  <strong id="ryVacancyLossAmt" class="tool-cell-val">₹91,000</strong>
+                  <span class="tool-cell-sub">1 Month Tenant Turnover Buffer</span>
+                </div>
+                <div class="tool-breakdown-cell">
+                  <span class="tool-cell-label">MUNICIPAL PROPERTY TAX</span>
+                  <strong id="ryPropTaxAmt" class="tool-cell-val">₹12,500 / yr</strong>
+                  <span class="tool-cell-sub">Deductible under Sec 24</span>
+                </div>
+                <div class="tool-breakdown-cell">
+                  <span class="tool-cell-label">SEC 24(a) 30% REPAIRS SHIELD</span>
+                  <strong id="rySec24ShieldAmt" class="tool-cell-val">₹2,96,670</strong>
+                  <span class="tool-cell-sub">Tax-Free Standard Allowance</span>
+                </div>
+              </div>
+
+              <!-- Rental Strategy Advisory -->
+              <div class="tool-alert-box safe">
+                <div class="tool-alert-header">
+                  <span class="tool-alert-icon">📊</span>
+                  <strong>INSTITUTIONAL YIELD GAP INSIGHT:</strong>
+                </div>
+                <p id="ryAdvisoryMsg" class="tool-alert-body" style="font-size:0.84rem;">
+                  Gross rental yields in urban residential properties typically overestimate net investor cash return by 100 to 140 basis points due to compounding society maintenance fees and tenant search vacancies.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             PANEL: Joint Development Agreement (JDA) & Section 45(5A) Estimator
+             ============================================================ -->
+        <div class="tool-panel" id="panel-jda" role="tabpanel" aria-labelledby="tab-jda">
+          <div class="tool-grid-layout">
+            <div class="tool-input-col">
+              <div class="tool-card-header">
+                <span class="tool-card-tag">INCOME TAX ACT 1961 &bull; SECTION 45(5A) &amp; SECTION 194-IC &bull; JDA TRANCHE ENGINE</span>
+                <h3 class="tool-card-heading">Joint Development Agreement (JDA) &amp; Sec 45(5A) Estimator</h3>
+                <p class="tool-card-sub">Model landowner vs. builder built-up revenue sharing, determine statutory Section 194-IC TDS on upfront deposits, and plan deferred capital gains tax liability upon Completion Certificate (CC) issuance.</p>
+              </div>
+
+              <!-- Land Extent Slider & Units -->
+              <div class="tool-form-row">
+                <div class="tool-form-group">
+                  <div class="tool-label-row">
+                    <label for="jdaLandExtent" class="tool-label">Land Parcel Extent</label>
+                    <span id="jdaLandExtentTxt" class="tool-live-badge">1.00 Acre (43,560 sq.ft)</span>
+                  </div>
+                  <input type="number" id="jdaLandExtent" class="tool-number-input" value="1.0" min="0.1" max="50" step="0.1">
+                </div>
+
+                <div class="tool-form-group">
+                  <label for="jdaUnitType" class="tool-label">Measurement Unit</label>
+                  <select id="jdaUnitType" class="tool-select">
+                    <option value="acre" selected>Acres (1 Acre = 43,560 sq.ft)</option>
+                    <option value="gunta">Guntas (1 Gunta = 1,089 sq.ft)</option>
+                    <option value="sqft">Square Feet (Direct Area)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Permissible FAR & Sharing Ratio -->
+              <div class="tool-form-row">
+                <div class="tool-form-group">
+                  <label for="jdaFarVal" class="tool-label">Permissible FAR / FSI</label>
+                  <select id="jdaFarVal" class="tool-select">
+                    <option value="1.75">1.75 FAR (Standard Road &lt; 40 ft)</option>
+                    <option value="2.25">2.25 FAR (Road 40–60 ft)</option>
+                    <option value="2.50" selected>2.50 FAR (Road 60–80 ft)</option>
+                    <option value="3.00">3.00 FAR (Road &gt; 80 ft / Transit)</option>
+                    <option value="3.50">3.50 FAR (Premium Commercial/Metro)</option>
+                  </select>
+                </div>
+
+                <div class="tool-form-group">
+                  <div class="tool-label-row">
+                    <label for="jdaSharingRatio" class="tool-label">Landowner Built-Up Share (%)</label>
+                    <span id="jdaSharingRatioTxt" class="tool-live-badge">40% Share</span>
+                  </div>
+                  <input type="range" id="jdaSharingRatio" class="tool-slider" min="25" max="60" step="1" value="40">
+                </div>
+              </div>
+
+              <!-- Upfront Consideration & Projected Market Price -->
+              <div class="tool-form-row">
+                <div class="tool-form-group">
+                  <label for="jdaUpfrontDeposit" class="tool-label">Non-Refundable Upfront Cash (₹)</label>
+                  <input type="number" id="jdaUpfrontDeposit" class="tool-number-input" value="10000000" min="0" step="500000">
+                  <small style="color:var(--text-muted); font-size:0.75rem;">Monetary deposit subject to 10% Section 194-IC TDS</small>
+                </div>
+
+                <div class="tool-form-group">
+                  <label for="jdaProjectedRate" class="tool-label">Projected Base Rate at CC (₹/sq.ft)</label>
+                  <input type="number" id="jdaProjectedRate" class="tool-number-input" value="8500" min="2000" step="250">
+                  <small style="color:var(--text-muted); font-size:0.75rem;">Stamp duty guidance value on date of completion</small>
+                </div>
+              </div>
+
+              <!-- Original Acquisition Cost -->
+              <div class="tool-form-group">
+                <div class="tool-label-row">
+                  <label for="jdaOriginalCost" class="tool-label">Original Land Acquisition Cost (₹)</label>
+                  <span id="jdaOriginalCostTxt" class="tool-live-badge">₹50,00,000</span>
+                </div>
+                <input type="number" id="jdaOriginalCost" class="tool-number-input" value="5000000" min="100000" step="500000">
+              </div>
+            </div>
+
+            <div class="tool-results-col">
+              <div class="tool-kpi-card highlight">
+                <span class="tool-kpi-label">TOTAL LANDOWNER REALIZABLE VALUE</span>
+                <div id="jdaTotalRealizable" class="tool-kpi-val primary">₹38.03 Cr</div>
+                <div id="jdaRealizableSub" class="tool-kpi-sub">Landowner Built-Up Allocation: 43,560 sq.ft constructed + ₹1.00 Cr upfront monetary cash</div>
+              </div>
+
+              <!-- Inflow Ribbon -->
+              <div class="tool-regime-card">
+                <div class="regime-col">
+                  <span class="regime-tag" style="background:#ECFDF5; color:#065F46;">UPFRONT MONETARY CASH</span>
+                  <div class="regime-rate">Signing Consideration</div>
+                  <div class="regime-sub">Gross Cash Inflow:</div>
+                  <strong id="jdaGrossCashAmt" class="regime-amt" style="color:#059669;">₹1,00,00,000</strong>
+                </div>
+                <div class="regime-divider">+</div>
+                <div class="regime-col">
+                  <span class="regime-tag" style="background:#FFFBEB; color:#92400E;">CONSTRUCTED BUILT-UP SHARE</span>
+                  <div class="regime-rate" id="jdaConstructedAreaTxt">43,560 sq.ft Allocation</div>
+                  <div class="regime-sub">Market Asset Value:</div>
+                  <strong id="jdaConstructedValAmt" class="regime-amt" style="color:#D97706;">₹37.03 Cr</strong>
+                </div>
+              </div>
+
+              <!-- 4-Cell Granular Breakdown -->
+              <div class="tool-breakdown-grid">
+                <div class="tool-breakdown-cell">
+                  <span class="tool-cell-label">TOTAL DEVELOPABLE AREA</span>
+                  <strong id="jdaTotalDevelopable" class="tool-cell-val">1,08,900 sq.ft</strong>
+                  <span class="tool-cell-sub">Gross Built-Up Potential (FAR 2.50)</span>
+                </div>
+                <div class="tool-breakdown-cell">
+                  <span class="tool-cell-label">DEVELOPER SHARE (60%)</span>
+                  <strong id="jdaDeveloperArea" class="tool-cell-val">65,340 sq.ft</strong>
+                  <span class="tool-cell-sub">Developer Commercialization Pool</span>
+                </div>
+                <div class="tool-breakdown-cell">
+                  <span class="tool-cell-label">SECTION 194-IC TDS (10%)</span>
+                  <strong id="jdaTdsWithheld" class="tool-cell-val">₹10,00,000</strong>
+                  <span class="tool-cell-sub">Withheld on Upfront Cash Consideration</span>
+                </div>
+                <div class="tool-breakdown-cell">
+                  <span class="tool-cell-label">SEC 45(5A) DEFERRED LTCG TAX</span>
+                  <strong id="jdaLtcgTaxAmt" class="tool-cell-val">₹4.69 Cr</strong>
+                  <span class="tool-cell-sub">12.5% Rate Payable upon CC Issuance</span>
+                </div>
+              </div>
+
+              <!-- Statutory Clause Alert -->
+              <div class="tool-alert-box safe">
+                <div class="tool-alert-header">
+                  <span class="tool-alert-icon">⚖️</span>
+                  <strong>SECTION 45(5A) TAX DEFERRAL SAFEGUARD:</strong>
+                </div>
+                <p class="tool-alert-body" style="font-size:0.84rem;">
+                  Under Section 45(5A) of the Income Tax Act, capital gains tax liability does <strong>NOT</strong> arise upon signing the JDA or handing over land possession. It is legally deferred to the financial year in which the <strong>Certificate of Completion (CC)</strong> is issued by the municipal planning authority. Note: The landowner must not alienate or transfer their share prior to CC issuance.
+                </p>
+              </div>
             </div>
           </div>
         </div>

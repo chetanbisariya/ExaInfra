@@ -1887,18 +1887,66 @@ a.contact-method-value:hover {
   box-shadow: var(--shadow-card);
 }
 
+/* Suite Category Filter Navigation Bar */
+.workbench-category-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 0.4rem;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-full);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.workbench-category-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.cat-pill-btn {
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 0.45rem 1.15rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  font-family: var(--font-main);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  touch-action: manipulation;
+}
+
+.cat-pill-btn:hover {
+  color: var(--navy-authority);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.cat-pill-btn.active {
+  background: var(--navy-authority);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(11, 25, 44, 0.2);
+}
+
 .tools-tab-nav {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 0.75rem;
   margin-bottom: 2rem;
   border-bottom: 2px solid var(--border-card);
   padding-bottom: 1.25rem;
 }
 
-@media (max-width: 1150px) {
+@media (max-width: 1250px) {
   .tools-tab-nav {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -1961,6 +2009,27 @@ a.contact-method-value:hover {
   color: var(--text-muted);
   font-weight: 600;
   line-height: 1.2;
+}
+
+.tool-tab-cat-badge {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.12rem 0.42rem;
+  border-radius: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  color: var(--text-muted);
+}
+
+.tool-tab-btn.active .tool-tab-cat-badge {
+  background: var(--saffron-light);
+  border-color: var(--saffron-border);
+  color: var(--saffron-700);
 }
 
 .tool-tab-btn.active .tool-tab-title {

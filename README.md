@@ -26,14 +26,25 @@
 - **CPWD DSR 2026 & NBC 2016 Compliant**: Granular Bill of Quantities (BoQ) for residential, villa, and commercial structures across Standard (₹1,950/sq ft), Premium (₹2,650/sq ft), and Ultra-Luxury (₹3,850/sq ft) specifications.
 - **Milestone Escrow Framework**: RERA-compliant 5-stage tranche disbursement system tying contractor payments to verified structural engineering milestones.
 
-### 4. ⚙️ Institutional Real Estate & Statutory Asset Tools
+### 4. ⚙️ Institutional Real Estate & Statutory Asset Tools (10 Sovereign Engines across 4 Suites)
+
+#### Suite A: 🏛️ Statutory, Stamp Duty & Property Taxes
 - **Guidance Value & Stamp Duty Engine**: Sub-Registrar guidance rate verification with Section 50C deemed consideration valuation.
 - **Section 54 Capital Gains Shield**: Budget 2024 LTCG tax optimization model (12.5% without indexation vs 20% with indexation) with Section 54EC bond allocation and Capital Gains Account Scheme (CGAS) timelines.
-- **Location-Wise Municipal Property Tax Engine**: Statutory property tax model across BBMP Bengaluru (UAV SAS Scheme), BMC Mumbai (Capital Value System with <500 sq ft flat exemption), MCD Delhi (Unit Area System Categories A-H), GHMC Hyderabad (ARV with 33.33% maintenance deduction), GCC Chennai (Revised Street Rate), and PMC Pune (40% PT40 residential self-occupied concession) with early rebate optimization and direct official municipal portal links.
-- **RERA Delay Penalty Claim Calculator**: RERA Section 18 statutory claim model at SBI MCLR + 2% compounding interest.
-- **SM REIT vs Direct CRE Modeler**: SEBI SM REIT Regulations 2024 yield, liquidity, and tax comparison.
-- **FAR / FSI & NBC Density Modeler**: National Building Code 2016 setbacks, road width multipliers, and premium FAR calculations.
+- **Location-Wise Municipal Property Tax Engine**: Statutory property tax model across BBMP Bengaluru (UAV SAS Scheme), BMC Mumbai (Capital Value System with <500 sq ft flat exemption), MCD Delhi (Unit Area System Categories A-H), GHMC Hyderabad (ARV with 33.33% maintenance deduction), GCC Chennai (Revised Street Rate), and PMC Pune (40% PT40 residential self-occupied concession) with direct official municipal portal links.
 - **NRI Property Sale TDS (Section 195)**: Foreign remittance withholding tax optimizer with Section 197 Lower TDS Certificate (Form 13) guidance.
+
+#### Suite B: 💳 Loans & Financing
+- **Home Loan EMI & Statutory Tax Shield Matrix**: Models gross monthly EMI across SBI, HDFC, and ICICI benchmark rates and computes the true net monthly outgo after factoring in Section 24(b) (₹2,00,000 interest) and Section 80C (₹1,50,000 principal) tax deductions.
+
+#### Suite C: 📈 Yields & Investment
+- **Small & Medium (SM) REIT vs Direct CRE Modeler**: SEBI SM REIT Regulations 2024 yield, liquidity, and tax comparison.
+- **Micro-Market Net Rental Yield & Society Maintenance ROI**: Accounts for monthly society maintenance charges, municipal taxes, and tenant vacancy provisions across India's top IT and commercial micro-markets.
+
+#### Suite D: 🏗️ Plot & Development Compliance
+- **RERA Delay Penalty Claim Calculator**: RERA Section 18 statutory claim model at SBI MCLR + 2% compounding interest with formal legal demand notice generation.
+- **FAR / FSI & NBC Density Modeler**: National Building Code 2016 setbacks, road width multipliers, and premium FAR calculations.
+- **Joint Development Agreement (JDA) & Section 45(5A) Estimator**: Landowner vs. builder built-up revenue sharing, Section 194-IC TDS on deposits, and deferred capital gains tax liability upon Completion Certificate (CC) issuance.
 
 ---
 
