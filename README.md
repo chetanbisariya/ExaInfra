@@ -29,6 +29,7 @@
 ### 4. ⚙️ Institutional Real Estate & Statutory Asset Tools
 - **Guidance Value & Stamp Duty Engine**: Sub-Registrar guidance rate verification with Section 50C deemed consideration valuation.
 - **Section 54 Capital Gains Shield**: Budget 2024 LTCG tax optimization model (12.5% without indexation vs 20% with indexation) with Section 54EC bond allocation and Capital Gains Account Scheme (CGAS) timelines.
+- **Location-Wise Municipal Property Tax Engine**: Statutory property tax model across BBMP Bengaluru (UAV SAS Scheme), BMC Mumbai (Capital Value System with <500 sq ft flat exemption), MCD Delhi (Unit Area System Categories A-H), GHMC Hyderabad (ARV with 33.33% maintenance deduction), GCC Chennai (Revised Street Rate), and PMC Pune (40% PT40 residential self-occupied concession) with early rebate optimization and direct official municipal portal links.
 - **RERA Delay Penalty Claim Calculator**: RERA Section 18 statutory claim model at SBI MCLR + 2% compounding interest.
 - **SM REIT vs Direct CRE Modeler**: SEBI SM REIT Regulations 2024 yield, liquidity, and tax comparison.
 - **FAR / FSI & NBC Density Modeler**: National Building Code 2016 setbacks, road width multipliers, and premium FAR calculations.

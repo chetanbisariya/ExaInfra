@@ -1889,11 +1889,17 @@ a.contact-method-value:hover {
 
 .tools-tab-nav {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   gap: 0.75rem;
   margin-bottom: 2rem;
   border-bottom: 2px solid var(--border-card);
   padding-bottom: 1.25rem;
+}
+
+@media (max-width: 1150px) {
+  .tools-tab-nav {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .tool-tab-btn {
@@ -2432,6 +2438,7 @@ a.contact-method-value:hover {
 }
 
 @media (max-width: 480px) {
+  .tools-tab-nav { grid-template-columns: repeat(2, 1fr); gap: 0.45rem; }
   .container { padding: 0 0.85rem; }
   .hero-headline { font-size: 1.85rem; }
   .hero-metric-bar { grid-template-columns: 1fr; }

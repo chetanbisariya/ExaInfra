@@ -1336,9 +1336,478 @@ document.addEventListener('DOMContentLoaded', () => {
       if (el) el.addEventListener('change', updateNriTdsCalculator);
     });
 
+    // ------------------------------------------------------------------
+    // TOOL 7: Location-Wise Municipal Property Tax Engine
+    // ------------------------------------------------------------------
+    const propTaxCity = document.getElementById('propTaxCity');
+    const propTaxZone = document.getElementById('propTaxZone');
+    const propTaxUsage = document.getElementById('propTaxUsage');
+    const propTaxAge = document.getElementById('propTaxAge');
+    const propTaxArea = document.getElementById('propTaxArea');
+    const propTaxAreaNum = document.getElementById('propTaxAreaNum');
+    const propTaxAreaTxt = document.getElementById('propTaxAreaTxt');
+    const propTaxGuidanceRate = document.getElementById('propTaxGuidanceRate');
+    const propTaxGuidanceRateTxt = document.getElementById('propTaxGuidanceRateTxt');
+    const propTaxGuidanceGroup = document.getElementById('propTaxGuidanceGroup');
+    const propTaxGuidanceLbl = document.getElementById('propTaxGuidanceLbl');
+    const propTaxEarlyPay = document.getElementById('propTaxEarlyPay');
+
+    const propTaxTotalPayout = document.getElementById('propTaxTotalPayout');
+    const propTaxPayoutSub = document.getElementById('propTaxPayoutSub');
+    const propTaxRebateRateTxt = document.getElementById('propTaxRebateRateTxt');
+    const propTaxRebateAmt = document.getElementById('propTaxRebateAmt');
+    const propTaxPenaltyAmt = document.getElementById('propTaxPenaltyAmt');
+    const propTaxBaseAmt = document.getElementById('propTaxBaseAmt');
+    const propTaxBaseSub = document.getElementById('propTaxBaseSub');
+    const propTaxSwmAmt = document.getElementById('propTaxSwmAmt');
+    const propTaxSwmSub = document.getElementById('propTaxSwmSub');
+    const propTaxCessAmt = document.getElementById('propTaxCessAmt');
+    const propTaxCessSub = document.getElementById('propTaxCessSub');
+    const propTaxWaterAmt = document.getElementById('propTaxWaterAmt');
+    const propTaxWaterSub = document.getElementById('propTaxWaterSub');
+    const propTaxIdBadge = document.getElementById('propTaxIdBadge');
+    const propTaxPortalBtn = document.getElementById('propTaxPortalBtn');
+    const propTaxStatutoryRef = document.getElementById('propTaxStatutoryRef');
+
+    const municipalCityData = {
+      blr: {
+        name: 'Bengaluru (BBMP)',
+        showGuidance: false,
+        guidanceLabel: 'Sub-Registrar Guidance Rate (₹/sq.ft)',
+        idBadge: 'BBMP 10-Digit PID / SAS Form IV/V',
+        portalUrl: 'https://bbmptax.karnataka.gov.in',
+        portalName: 'Official BBMP Portal ↗',
+        statutoryRef: 'Governed under <strong>Section 108A of Karnataka Municipal Corporations Act 1976</strong> & Bruhat Bengaluru Mahanagara Palike (BBMP) Act 2020.',
+        baseSubText: 'Unit Area SAS Assessment (10 Months)',
+        swmSubText: 'SWM Mandatory Service Surcharge',
+        cessSubText: '24% Statutory State Cess (Health/Library)',
+        waterSubText: 'Included in BWSSB Water Bill',
+        zones: [
+          { val: 'a', label: 'Zone A — Central / Prime (MG Rd, Indiranagar, Koramangala)', defaultRate: 11000 },
+          { val: 'b', label: 'Zone B — Major Arterials / IT Corridors (Whitefield, HSR, Bellandur, ORR)', defaultRate: 8500 },
+          { val: 'c', label: 'Zone C — Established Residential (Jayanagar, Malleshwaram, JP Nagar)', defaultRate: 7200 },
+          { val: 'd', label: 'Zone D — Developing Suburbs (Electronic City, Sarjapur, Yelahanka)', defaultRate: 5800 },
+          { val: 'e', label: 'Zone E — Peripheral Extensions (Kengeri, KR Puram, Thanisandra)', defaultRate: 4600 },
+          { val: 'f', label: 'Zone F — Rural / CMC Boundary Merged Layouts', defaultRate: 3500 }
+        ]
+      },
+      mum: {
+        name: 'Mumbai (BMC / MCGM)',
+        showGuidance: true,
+        guidanceLabel: 'Ready Reckoner Guidance Rate (₹/sq.ft)',
+        idBadge: 'BMC 15-Digit Property Code (SAC No.)',
+        portalUrl: 'https://ptaxportal.mcgm.gov.in',
+        portalName: 'Official BMC Portal ↗',
+        statutoryRef: 'Governed under <strong>Section 140 of Mumbai Municipal Corporation Act 1888</strong>. Apartments &lt; 500 sq.ft carpet receive 100% General Tax waiver.',
+        baseSubText: 'Capital Value System (CVS) Base',
+        swmSubText: 'Municipal Conservancy Tax Included',
+        cessSubText: 'Education Cess & Tree Cess',
+        waterSubText: 'Water & Sewerage Benefit Tax',
+        zones: [
+          { val: 'island', label: 'South Mumbai / Island City (Colaba, Nariman Pt, Malabar Hill, Dadar)', defaultRate: 32000 },
+          { val: 'west', label: 'Western Suburbs (Bandra, Juhu, Andheri, Borivali, Goregaon)', defaultRate: 21000 },
+          { val: 'east', label: 'Eastern Suburbs (Powai, Ghatkopar, Mulund, Chembur, Vikhroli)', defaultRate: 14500 },
+          { val: 'ext', label: 'Extended MMR / Outer Boundaries (Dahisar, Mira-Bhayandar, Thane)', defaultRate: 9500 }
+        ]
+      },
+      del: {
+        name: 'Delhi NCR (MCD)',
+        showGuidance: false,
+        guidanceLabel: 'Circle Rate Benchmark (₹/sq.m)',
+        idBadge: 'MCD Unique Property ID (UPIC)',
+        portalUrl: 'https://mcdonline.nic.in',
+        portalName: 'Official MCD Portal ↗',
+        statutoryRef: 'Governed under <strong>Section 114 of Delhi Municipal Corporation Act 1957</strong> (Unit Area System UAS Categories A through H).',
+        baseSubText: 'Unit Area System (UAS) Annual Value',
+        swmSubText: 'Delhi Sanitation & User Charges',
+        cessSubText: '1% Statutory Education Cess',
+        waterSubText: 'Billed Separately by Delhi Jal Board',
+        zones: [
+          { val: 'cat_a', label: 'Category A — Super Prime (Golf Links, Vasant Vihar, Jor Bagh)', defaultRate: 774000 },
+          { val: 'cat_b', label: 'Category B — Prime (Defence Colony, GK, Hauz Khas, Panchsheel)', defaultRate: 245000 },
+          { val: 'cat_c', label: 'Category C — Established (Civil Lines, Lajpat Nagar, Nizamuddin, CR Park)', defaultRate: 160000 },
+          { val: 'cat_d', label: 'Category D — Mid-Tier (Janakpuri, Mayur Vihar, Daryaganj, Preet Vihar)', defaultRate: 128000 },
+          { val: 'cat_e', label: 'Category E — Moderate (Karol Bagh, Laxmi Nagar, Shahdara)', defaultRate: 70000 },
+          { val: 'cat_f', label: 'Category F — Developing (Nangloi, Uttam Nagar, Govindpuri)', defaultRate: 56000 },
+          { val: 'cat_g', label: 'Category G — Regularized Colonies (Badarpur, Tuglakabad)', defaultRate: 46000 },
+          { val: 'cat_h', label: 'Category H — Urbanized Villages & Rural Extended Abadi', defaultRate: 23000 }
+        ]
+      },
+      hyd: {
+        name: 'Hyderabad (GHMC)',
+        showGuidance: false,
+        guidanceLabel: 'Plinth Valuation Benchmark (₹/sq.ft)',
+        idBadge: 'GHMC Property Tax ID Number (PTIN)',
+        portalUrl: 'https://ghmc.gov.in',
+        portalName: 'Official GHMC Portal ↗',
+        statutoryRef: 'Governed under <strong>Section 212 of GHMC Act 1955</strong> with statutory 33.33% maintenance deduction from Gross Rental Value.',
+        baseSubText: 'Net Annual Rental Value (NARV) Base',
+        swmSubText: 'GHMC Clean City Surcharge',
+        cessSubText: '8% Statutory Library Cess',
+        waterSubText: 'Billed Separately by HMWSSB',
+        zones: [
+          { val: 'core_it', label: 'Circle 1 — Core IT Corridor (Madhapur, Gachibowli, Hitec City, Kondapur)', defaultRate: 8500 },
+          { val: 'prime_central', label: 'Circle 2 — Prime Central (Banjara Hills, Jubilee Hills, Somajiguda)', defaultRate: 9500 },
+          { val: 'est_res', label: 'Circle 3 — Established Urban (Kukatpally, Secunderabad, Ameerpet)', defaultRate: 5200 },
+          { val: 'outer', label: 'Circle 4 — Outer Suburbs (Miyapur, Uppal, LB Nagar, Tellapur)', defaultRate: 3800 }
+        ]
+      },
+      chn: {
+        name: 'Chennai (GCC)',
+        showGuidance: false,
+        guidanceLabel: 'Basic Street Valuation Rate (₹/sq.ft)',
+        idBadge: 'GCC 15-Digit Assessment Number / Ward-Bill',
+        portalUrl: 'https://chennaicorporation.gov.in',
+        portalName: 'Official GCC Portal ↗',
+        statutoryRef: 'Governed under <strong>Tamil Nadu Urban Local Bodies Rules</strong> & GCC Revised General Property Tax Revision.',
+        baseSubText: 'Annual Value General Tax (20%)',
+        swmSubText: 'GCC Solid Waste User Fee',
+        cessSubText: 'Elementary Education Tax (5%)',
+        waterSubText: 'CMWSSB Water & Sewerage Tax (7%)',
+        zones: [
+          { val: 'central', label: 'Zone 1 — Prime Central (Boat Club, Poes Garden, Nungambakkam)', defaultRate: 14000 },
+          { val: 'it_omr', label: 'Zone 2 — IT Corridor / OMR & ECR (Thoraipakkam, Sholinganallur, Adyar)', defaultRate: 9000 },
+          { val: 'est_res', label: 'Zone 3 — Established Urban (Anna Nagar, T Nagar, Mylapore, Kilpauk)', defaultRate: 8000 },
+          { val: 'ind_north', label: 'Zone 4 — North / Industrial Corridor (Ambattur, Guindy, Kolathur)', defaultRate: 4800 }
+        ]
+      },
+      pun: {
+        name: 'Pune (PMC)',
+        showGuidance: true,
+        guidanceLabel: 'Ready Reckoner Guidance Rate (₹/sq.ft)',
+        idBadge: 'PMC Property ID (Ward + Peth + Property No)',
+        portalUrl: 'https://propertytax.punecorporation.org',
+        portalName: 'Official PMC Portal ↗',
+        statutoryRef: 'Governed under <strong>Maharashtra Municipal Corporations Act</strong> with reinstated 40% PT40 residential self-occupied rebate.',
+        baseSubText: 'Annual Rateable Value (ARV) Base',
+        swmSubText: 'Cleanliness & Sanitation Cess (6%)',
+        cessSubText: 'Tree Cess & Fire Tax (2%)',
+        waterSubText: 'Water Supply Tax (8%)',
+        zones: [
+          { val: 'peth', label: 'Core Urban / Peth Areas (Shivaji Nagar, Deccan, Sadashiv Peth)', defaultRate: 10500 },
+          { val: 'east', label: 'Eastern IT Hubs (Kalyani Nagar, Koregaon Park, Viman Nagar, Kharadi)', defaultRate: 9500 },
+          { val: 'west', label: 'Western IT Corridor (Baner, Balewadi, Aundh, Wakad, Hinjawadi)', defaultRate: 8500 },
+          { val: 'outer', label: 'Outer Suburbs (Kothrud, Hadapsar, Katraj, Undri, Sinhagad Rd)', defaultRate: 6000 }
+        ]
+      }
+    };
+
+    function populateZonesForCity(cityKey) {
+      if (!propTaxZone) return;
+      const data = municipalCityData[cityKey];
+      if (!data) return;
+
+      propTaxZone.innerHTML = '';
+      data.zones.forEach((z, idx) => {
+        const opt = document.createElement('option');
+        opt.value = z.val;
+        opt.textContent = z.label;
+        if (idx === (data.zones.length > 2 ? 1 : 0)) opt.selected = true;
+        propTaxZone.appendChild(opt);
+      });
+
+      if (propTaxGuidanceGroup) {
+        propTaxGuidanceGroup.style.display = data.showGuidance ? 'block' : 'none';
+      }
+      if (propTaxGuidanceLbl) {
+        propTaxGuidanceLbl.textContent = data.guidanceLabel;
+      }
+      const selectedZoneObj = data.zones[1] || data.zones[0];
+      if (propTaxGuidanceRate && selectedZoneObj) {
+        propTaxGuidanceRate.value = selectedZoneObj.defaultRate;
+        if (propTaxGuidanceRateTxt) {
+          propTaxGuidanceRateTxt.textContent = `₹${selectedZoneObj.defaultRate.toLocaleString('en-IN')}/sq.ft`;
+        }
+      }
+
+      if (propTaxIdBadge) propTaxIdBadge.textContent = data.idBadge;
+      if (propTaxPortalBtn) {
+        propTaxPortalBtn.href = data.portalUrl;
+        const btnSpan = propTaxPortalBtn.querySelector('span');
+        if (btnSpan) btnSpan.textContent = data.portalName;
+      }
+      if (propTaxStatutoryRef) propTaxStatutoryRef.innerHTML = data.statutoryRef;
+      if (propTaxBaseSub) propTaxBaseSub.textContent = data.baseSubText;
+      if (propTaxSwmSub) propTaxSwmSub.textContent = data.swmSubText;
+      if (propTaxCessSub) propTaxCessSub.textContent = data.cessSubText;
+      if (propTaxWaterSub) propTaxWaterSub.textContent = data.waterSubText;
+    }
+
+    function syncPropTaxArea(val) {
+      const num = Math.max(100, Math.min(50000, parseFloat(val) || 1250));
+      if (propTaxArea) propTaxArea.value = Math.min(10000, num);
+      if (propTaxAreaNum) propTaxAreaNum.value = num;
+      if (propTaxAreaTxt) propTaxAreaTxt.textContent = `${Number(num).toLocaleString('en-IN')} sq.ft`;
+    }
+
+    function updatePropTaxCalculator() {
+      if (!propTaxCity || !propTaxTotalPayout) return;
+
+      const city = propTaxCity.value || 'blr';
+      const zone = propTaxZone ? propTaxZone.value : 'b';
+      const usage = propTaxUsage ? propTaxUsage.value : 'res_self';
+      const age = propTaxAge ? propTaxAge.value : 'age_new';
+      const area = parseFloat(propTaxAreaNum ? propTaxAreaNum.value : (propTaxArea ? propTaxArea.value : 1250)) || 1250;
+      const guidanceRate = parseFloat(propTaxGuidanceRate ? propTaxGuidanceRate.value : 0) || 15000;
+      const isEarly = propTaxEarlyPay ? propTaxEarlyPay.checked : true;
+
+      let baseTax = 0;
+      let swmTax = 0;
+      let cessTax = 0;
+      let waterTax = 0;
+      let rebatePct = 0.05;
+      let rebateAmt = 0;
+      let penaltyAmt = 0;
+      let totalTax = 0;
+
+      const isSemiPucca = age === 'age_semi';
+      const isMature = age === 'age_old';
+      const isMid = age === 'age_mid';
+
+      if (city === 'blr') {
+        // BBMP Unit Area Value (UAV) SAS Model
+        const uavRates = {
+          a: { res_self: 2.50, res_rent: 5.00, commercial: 12.00, industrial: 6.00 },
+          b: { res_self: 2.00, res_rent: 4.00, commercial: 9.00, industrial: 4.50 },
+          c: { res_self: 1.60, res_rent: 3.20, commercial: 7.00, industrial: 3.50 },
+          d: { res_self: 1.20, res_rent: 2.40, commercial: 5.50, industrial: 2.80 },
+          e: { res_self: 0.80, res_rent: 1.60, commercial: 4.00, industrial: 2.00 },
+          f: { res_self: 0.50, res_rent: 1.00, commercial: 3.00, industrial: 1.50 }
+        };
+        const zoneRates = uavRates[zone] || uavRates['c'];
+        const ratePerSqft = zoneRates[usage] || 2.00;
+
+        const depPct = isMature ? 0.30 : (isMid ? 0.15 : (isSemiPucca ? 0.20 : 0.0));
+        const guav = area * ratePerSqft * 10; // 10 months statutory
+        const nav = guav * (1 - depPct);
+
+        const taxRate = (usage === 'commercial' || usage === 'industrial') ? 0.25 : 0.20;
+        baseTax = Math.round(nav * taxRate);
+
+        // 24% statutory cesses: Health 15%, Library 6%, Beggary 3%
+        cessTax = Math.round(baseTax * 0.24);
+
+        // Solid waste management cess
+        if (usage === 'commercial' || usage === 'industrial') {
+          swmTax = 1800;
+        } else {
+          swmTax = area <= 1000 ? 360 : 600;
+        }
+        waterTax = 0; // Handled via BWSSB
+        rebatePct = 0.05;
+        rebateAmt = isEarly ? Math.round(baseTax * rebatePct) : 0;
+        totalTax = Math.max(0, baseTax + cessTax + swmTax - rebateAmt);
+        penaltyAmt = Math.round((baseTax + cessTax + swmTax) * 0.02);
+
+      } else if (city === 'mum') {
+        // BMC Capital Value System (CVS)
+        const natureFactor = isSemiPucca ? 0.8 : 1.0;
+        const ageFactor = isMature ? 0.8 : (isMid ? 0.9 : 1.0);
+        const userFactor = usage === 'res_self' ? 1.0 : (usage === 'res_rent' ? 1.25 : (usage === 'commercial' ? 2.2 : 1.6));
+        const cv = area * guidanceRate * natureFactor * ageFactor * userFactor;
+
+        const isExemptResidential = (usage === 'res_self' || usage === 'res_rent') && area <= 500;
+
+        if (usage === 'commercial') {
+          baseTax = Math.round(cv * 0.0115);
+          waterTax = Math.round(cv * 0.0030);
+          cessTax = Math.round(cv * 0.0015);
+        } else if (usage === 'industrial') {
+          baseTax = Math.round(cv * 0.0085);
+          waterTax = Math.round(cv * 0.0020);
+          cessTax = Math.round(cv * 0.0010);
+        } else {
+          // Residential
+          baseTax = isExemptResidential ? 0 : Math.round(cv * 0.0035);
+          waterTax = Math.round(cv * 0.0012);
+          cessTax = Math.round(cv * 0.0008);
+        }
+        swmTax = 0; // Included in conservancy tax
+        rebatePct = 0.04;
+        rebateAmt = isEarly ? Math.round((baseTax + waterTax + cessTax) * rebatePct) : 0;
+        totalTax = Math.max(0, baseTax + waterTax + cessTax - rebateAmt);
+        penaltyAmt = Math.round((baseTax + waterTax + cessTax) * 0.02);
+
+      } else if (city === 'del') {
+        // MCD Unit Area System (UAS)
+        const buavRates = {
+          cat_a: 630, cat_b: 500, cat_c: 400, cat_d: 320,
+          cat_e: 270, cat_f: 230, cat_g: 200, cat_h: 100
+        };
+        const buav = buavRates[zone] || 400;
+        const areaSqm = area / 10.764;
+        const structure = isSemiPucca ? 0.7 : 1.0;
+        const occupancy = usage === 'res_rent' ? 2.0 : 1.0;
+        const ageF = isMature ? 0.8 : (isMid ? 0.9 : 1.0);
+        const useF = usage === 'commercial' ? 3.0 : (usage === 'industrial' ? 2.0 : 1.0);
+
+        const annualVal = areaSqm * buav * structure * occupancy * ageF * useF;
+
+        let taxRate = 0.11;
+        if (usage === 'commercial') {
+          taxRate = 0.20;
+        } else if (usage === 'industrial') {
+          taxRate = 0.15;
+        } else {
+          if (zone === 'cat_a' || zone === 'cat_b') taxRate = 0.12;
+          else if (zone === 'cat_c' || zone === 'cat_d' || zone === 'cat_e') taxRate = 0.11;
+          else taxRate = 0.07;
+        }
+
+        baseTax = Math.round(annualVal * taxRate);
+        cessTax = Math.round(baseTax * 0.01); // 1% education cess
+        swmTax = (usage === 'commercial' || usage === 'industrial') ? 2400 : 600;
+        waterTax = 0;
+        rebatePct = 0.10;
+        rebateAmt = isEarly ? Math.round(baseTax * rebatePct) : 0;
+        totalTax = Math.max(0, baseTax + cessTax + swmTax - rebateAmt);
+        penaltyAmt = Math.round((baseTax + cessTax + swmTax) * 0.02);
+
+      } else if (city === 'hyd') {
+        // GHMC Annual Rental Value (ARV) Method
+        const mrvRates = {
+          core_it: { res_self: 3.50, res_rent: 6.00, commercial: 15.00, industrial: 8.00 },
+          prime_central: { res_self: 3.00, res_rent: 5.00, commercial: 14.00, industrial: 7.50 },
+          est_res: { res_self: 2.20, res_rent: 3.80, commercial: 10.00, industrial: 5.50 },
+          outer: { res_self: 1.50, res_rent: 2.80, commercial: 7.50, industrial: 4.00 }
+        };
+        const rates = mrvRates[zone] || mrvRates['est_res'];
+        const mrv = rates[usage] || 2.50;
+        const ageFactor = isMature ? 0.80 : (isMid ? 0.90 : 1.0);
+        const garv = area * (mrv * ageFactor) * 12;
+        const narv = garv * 0.6667; // 33.33% statutory maintenance deduction
+
+        const taxRate = (usage === 'commercial' || usage === 'industrial') ? 0.30 : 0.25;
+        baseTax = Math.round(narv * taxRate);
+        cessTax = Math.round(baseTax * 0.08); // 8% library cess
+        swmTax = (usage === 'commercial' || usage === 'industrial') ? 1200 : 360;
+        waterTax = 0;
+        rebatePct = 0.05;
+        rebateAmt = isEarly ? Math.round(baseTax * rebatePct) : 0;
+        totalTax = Math.max(0, baseTax + cessTax + swmTax - rebateAmt);
+        penaltyAmt = Math.round((baseTax + cessTax + swmTax) * 0.02);
+
+      } else if (city === 'chn') {
+        // GCC Street Rate Model
+        const streetRates = {
+          central: { res_self: 2.80, res_rent: 4.50, commercial: 12.00, industrial: 6.50 },
+          it_omr: { res_self: 2.20, res_rent: 3.80, commercial: 10.00, industrial: 5.50 },
+          est_res: { res_self: 1.80, res_rent: 3.00, commercial: 8.00, industrial: 4.50 },
+          ind_north: { res_self: 1.20, res_rent: 2.20, commercial: 6.00, industrial: 3.50 }
+        };
+        const rates = streetRates[zone] || streetRates['est_res'];
+        const rate = rates[usage] || 2.00;
+        const ageFactor = isMature ? 0.80 : (isMid ? 0.90 : 1.0);
+        const annualVal = area * rate * ageFactor * 12 * 0.90; // 10% allowance
+
+        baseTax = Math.round(annualVal * 0.20);
+        cessTax = Math.round(annualVal * 0.05); // 5% Education Tax
+        waterTax = Math.round(annualVal * 0.07); // 7% Sewerage / Water Tax
+        swmTax = (usage === 'commercial' || usage === 'industrial') ? 1500 : 360;
+        rebatePct = 0.05;
+        rebateAmt = isEarly ? Math.min(5000, Math.round(baseTax * rebatePct)) : 0;
+        totalTax = Math.max(0, baseTax + cessTax + waterTax + swmTax - rebateAmt);
+        penaltyAmt = Math.round((baseTax + cessTax + waterTax + swmTax) * 0.02);
+
+      } else if (city === 'pun') {
+        // PMC Rateable Value Model with 40% PT40 Rebate
+        const natureFactor = isSemiPucca ? 0.8 : 1.0;
+        const ageFactor = isMature ? 0.8 : (isMid ? 0.9 : 1.0);
+        const useMult = usage === 'commercial' ? 2.2 : (usage === 'industrial' ? 1.6 : 1.0);
+        const capVal = area * guidanceRate * natureFactor * ageFactor * useMult;
+        const arv = capVal * 0.06;
+
+        let genTax = arv * 0.14;
+        if (usage === 'res_self') {
+          // Reinstated PT40 40% concession
+          genTax = genTax * 0.60;
+        }
+        baseTax = Math.round(genTax);
+        swmTax = Math.round(arv * 0.06); // Sanitation / Cleanliness
+        waterTax = Math.round(arv * 0.08); // Water supply tax
+        cessTax = Math.round(arv * 0.02); // Tree cess & fire tax
+        rebatePct = 0.05;
+        rebateAmt = isEarly ? Math.round(baseTax * rebatePct) : 0;
+        totalTax = Math.max(0, baseTax + swmTax + waterTax + cessTax - rebateAmt);
+        penaltyAmt = Math.round((baseTax + swmTax + waterTax + cessTax) * 0.02);
+      }
+
+      // Update DOM values
+      if (propTaxTotalPayout) propTaxTotalPayout.textContent = formatINR(totalTax);
+      if (propTaxBaseAmt) propTaxBaseAmt.textContent = formatINR(baseTax);
+      if (propTaxSwmAmt) propTaxSwmAmt.textContent = formatINR(swmTax);
+      if (propTaxCessAmt) propTaxCessAmt.textContent = formatINR(cessTax);
+      if (propTaxWaterAmt) propTaxWaterAmt.textContent = formatINR(waterTax);
+      if (propTaxRebateAmt) propTaxRebateAmt.textContent = formatINR(rebateAmt);
+      if (propTaxPenaltyAmt) propTaxPenaltyAmt.textContent = `${formatINR(penaltyAmt)} / mo`;
+      if (propTaxRebateRateTxt) propTaxRebateRateTxt.textContent = `${Math.round(rebatePct * 100)}% Prompt Rebate`;
+
+      if (propTaxPayoutSub) {
+        if (isEarly && rebateAmt > 0) {
+          propTaxPayoutSub.textContent = `Includes ${formatINR(rebateAmt)} Early Bird rebate applied for prompt seasonal filing.`;
+        } else {
+          propTaxPayoutSub.textContent = `Total standard annual liability payable to municipal treasury (all urban cesses included).`;
+        }
+      }
+    }
+
+    if (propTaxCity) {
+      propTaxCity.addEventListener('change', () => {
+        populateZonesForCity(propTaxCity.value);
+        updatePropTaxCalculator();
+      });
+    }
+
+    if (propTaxZone) {
+      propTaxZone.addEventListener('change', () => {
+        const cityKey = propTaxCity ? propTaxCity.value : 'blr';
+        const cityObj = municipalCityData[cityKey];
+        if (cityObj) {
+          const zObj = cityObj.zones.find(z => z.val === propTaxZone.value);
+          if (zObj && propTaxGuidanceRate) {
+            propTaxGuidanceRate.value = zObj.defaultRate;
+            if (propTaxGuidanceRateTxt) {
+              propTaxGuidanceRateTxt.textContent = `₹${zObj.defaultRate.toLocaleString('en-IN')}/sq.ft`;
+            }
+          }
+        }
+        updatePropTaxCalculator();
+      });
+    }
+
+    if (propTaxArea) {
+      propTaxArea.addEventListener('input', () => {
+        syncPropTaxArea(propTaxArea.value);
+        updatePropTaxCalculator();
+      });
+    }
+
+    if (propTaxAreaNum) {
+      propTaxAreaNum.addEventListener('input', () => {
+        syncPropTaxArea(propTaxAreaNum.value);
+        updatePropTaxCalculator();
+      });
+    }
+
+    if (propTaxGuidanceRate) {
+      propTaxGuidanceRate.addEventListener('input', () => {
+        const r = parseFloat(propTaxGuidanceRate.value) || 0;
+        if (propTaxGuidanceRateTxt) {
+          propTaxGuidanceRateTxt.textContent = `₹${r.toLocaleString('en-IN')}/sq.ft`;
+        }
+        updatePropTaxCalculator();
+      });
+    }
+
+    [propTaxUsage, propTaxAge, propTaxEarlyPay].forEach(el => {
+      if (el) el.addEventListener('change', updatePropTaxCalculator);
+    });
+
     // Initialize all statutory tools
     updateDutyCalculator();
     updateCapGainsCalculator();
+    populateZonesForCity('blr');
+    updatePropTaxCalculator();
     updateReraDelayCalculator();
     updateSmReitCalculator();
     updateFarFsiCalculator();
