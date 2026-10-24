@@ -1,0 +1,47 @@
+# ====================================================================
+# ExaInfra.in - Apache / LiteSpeed Web Security & Performance Configuration
+# ====================================================================
+
+# 1. Prevent Directory Browsing
+Options -Indexes
+
+# 2. Block Hidden Files & Dotfiles (.git, .env, etc.)
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# 3. Block Sensitive Data & Database Files from Public Direct Download
+<FilesMatch "\.(sqlite|sql|db|env|log|md|bak|conf|ini)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# 4. Strict Security Response Headers
+<IfModule mod_headers.c>
+    # Prevent Clickjacking
+    Header always set X-Frame-Options "DENY"
+
+    # Prevent MIME-type Sniffing
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Legacy XSS Protection for older browsers
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Restrict Referrer Information on cross-origin requests
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Permissions Policy (Disable unnecessary device sensors)
+    Header always set Permissions-Policy "geolocation=(), camera=(), microphone=(), payment=()"
+
+    # Content Security Policy (Allows Google Fonts, safe self assets)
+    Header always set Content-Security-Policy "default-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; frame-ancestors 'none';"
+</IfModule>
+
+# 5. Enable Gzip Compression for Mobile Performance
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json
+</IfModule>
+
+# 6. UTF-8 Default Encoding
+AddDefaultCharset UTF-8

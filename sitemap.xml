@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+  <!-- ExaInfra.in Homepage & Main Sovereign Terminal -->
+  <url>
+    <loc>https://exainfra.in/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.00</priority>
+  </url>
+
+  <!-- Pillar 1: Property Due Diligence & Scam Risk Radar (Kaveri 2.0 / RERA / BBMP Khata) -->
+  <url>
+    <loc>https://exainfra.in/#legal-radar</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- Pillar 2: Commercial Real Estate (CRE) Pre-Leased Yield Terminal & IRR Simulator -->
+  <url>
+    <loc>https://exainfra.in/#cre-terminal</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+
+  <!-- Pillar 3: CPWD DSR 2026 Turnkey Construction Cost BoQ & Escrow Ledger -->
+  <url>
+    <loc>https://exainfra.in/#build-boq</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Pillar 4: Sovereign Statutory & Computational Tools (Stamp Duty, Sec 54 LTCG, RERA Delay, SM REIT, FAR, NRI TDS) -->
+  <url>
+    <loc>https://exainfra.in/#statutory-tools</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- Contact Us & Institutional Legal Advisory Desk -->
+  <url>
+    <loc>https://exainfra.in/#contact</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.80</priority>
+  </url>
+
+  <!-- Indian Statutory Compliance Architecture (RERA 2016, IT Act Sec 65B, DPDP Act 2023) -->
+  <url>
+    <loc>https://exainfra.in/#regulatory-framework</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+
+</urlset>

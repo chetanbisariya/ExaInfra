@@ -1,0 +1,19 @@
+# ====================================================================
+# ExaInfra.in Robots Exclusion Protocol (SEO & Crawler Directives)
+# ====================================================================
+
+User-agent: *
+Allow: /
+Allow: /style.css
+Allow: /app.js
+Allow: /assets/
+Allow: /sitemap.xml
+
+# Protect internal APIs and database structures from indexation
+Disallow: /api/
+Disallow: /*.sqlite$
+Disallow: /*.sql$
+Disallow: /*.json$
+
+# Official XML Sitemap Location
+Sitemap: https://exainfra.in/sitemap.xml
