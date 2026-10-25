@@ -332,330 +332,1086 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ====================================================================
-  // 4. PILLAR 2: Commercial Real Estate (CRE) & Pre-Leased Yield Engine
+  // 4. WEB TERMINAL MULTI-PAGE ROUTER & DECK CONTROLLER
   // ====================================================================
-  const simCapInput = document.getElementById('simCapInput');
-  const simYieldInput = document.getElementById('simYieldInput');
-  const simEscSelect = document.getElementById('simEscSelect');
+  const TERMINAL_PAGES = [
+    { page: 1, id: 'build-boq', url: 'index.html', label: 'PAGE 1 OF 4 • 🏗️ FLAGSHIP COST ESTIMATOR & BOQ', shortTitle: 'Cost Estimator & BoQ' },
+    { page: 2, id: 'legal-radar', url: 'property-radar.html', label: 'PAGE 2 OF 4 • 🛡️ PROPERTY SCAM & TITLE RADAR', shortTitle: 'Property Scam Radar' },
+    { page: 3, id: 'statutory-tools', url: 'statutory-tools.html', label: 'PAGE 3 OF 4 • ⚙️ STATUTORY & TAX WORKBENCH (10 TOOLS)', shortTitle: 'Statutory Workbench' },
+    { page: 4, id: 'contact', url: 'contact.html', label: 'PAGE 4 OF 4 • ✉️ INSTITUTIONAL ADVISORY DESK', shortTitle: 'Advisory Desk' },
+    { page: 5, id: 'regulatory-framework', url: 'regulatory-framework.html', label: 'STATUTORY REPOSITORY • ⚖️ REGULATORY FRAMEWORK', shortTitle: 'Regulatory Law' }
+  ];
 
-  const simCapDisp = document.getElementById('simCapDisp');
-  const simYieldDisp = document.getElementById('simYieldDisp');
-  const simEscDisp = document.getElementById('simEscDisp');
+  const MULTI_PAGE_ROUTES = {
+    1: 'index.html',
+    'build-boq': 'index.html',
+    'index.html': 'index.html',
+    2: 'property-radar.html',
+    'legal-radar': 'property-radar.html',
+    'property-radar.html': 'property-radar.html',
+    3: 'statutory-tools.html',
+    'statutory-tools': 'statutory-tools.html',
+    'statutory-tools.html': 'statutory-tools.html',
+    4: 'contact.html',
+    'contact': 'contact.html',
+    'contact.html': 'contact.html',
+    5: 'regulatory-framework.html',
+    'regulatory-framework': 'regulatory-framework.html',
+    'regulatory-framework.html': 'regulatory-framework.html'
+  };
 
-  const simNoiDisp = document.getElementById('simNoiDisp');
-  const simMonthlyNoiDisp = document.getElementById('simMonthlyNoiDisp');
-  const simTaxShieldDisp = document.getElementById('simTaxShieldDisp');
-  const simTaxableDisp = document.getElementById('simTaxableDisp');
-  const simIrrDisp = document.getElementById('simIrrDisp');
-  const simAssetExitDisp = document.getElementById('simAssetExitDisp');
+  // Detect current active page file name
+  const currentPathFile = window.location.pathname.split('/').pop() || 'index.html';
+  let initialPageNum = 1;
+  if (currentPathFile.includes('property-radar')) initialPageNum = 2;
+  else if (currentPathFile.includes('statutory-tools')) initialPageNum = 3;
+  else if (currentPathFile.includes('contact')) initialPageNum = 4;
+  else if (currentPathFile.includes('regulatory')) initialPageNum = 5;
 
-  function calculateCreSimulator() {
-    if (!simCapInput || !simYieldInput) return;
+  let currentTerminalPage = initialPageNum;
+  let terminalViewMode = 'paginated'; // 'paginated' | 'continuous'
 
-    const capital = parseFloat(simCapInput.value);
-    const yieldPct = parseFloat(simYieldInput.value);
-    const escPct = parseFloat(simEscSelect ? simEscSelect.value : 15);
+  function switchTerminalPage(target, shouldScroll = true) {
+    let targetPage = 1;
+    if (typeof target === 'number') {
+      targetPage = Math.max(1, Math.min(TERMINAL_PAGES.length, target));
+    } else if (typeof target === 'string') {
+      const cleanId = target.replace(/^#/, '');
+      const found = TERMINAL_PAGES.find(p => p.id === cleanId || String(p.page) === cleanId || p.url === cleanId);
+      if (found) targetPage = found.page;
+    }
 
-    // Format Capital display in Cr
-    const capCr = (capital / 10000000).toFixed(2);
-    if (simCapDisp) simCapDisp.textContent = `₹${capCr} Cr`;
-    if (simYieldDisp) simYieldDisp.textContent = `${yieldPct.toFixed(1)}%`;
-    if (simEscDisp) simEscDisp.textContent = `${escPct}% Every 3 Years`;
+    const pageSections = document.querySelectorAll('.terminal-page');
+    // If running in multi-page mode (each page has its own standalone section)
+    if (pageSections.length <= 1) {
+      const targetUrl = MULTI_PAGE_ROUTES[targetPage] || 'index.html';
+      if (!currentPathFile.includes(targetUrl.replace('.html', '')) && currentPathFile !== targetUrl) {
+        window.location.href = targetUrl;
+        return;
+      }
+    }
 
-    const annualNoi = Math.round(capital * (yieldPct / 100));
-    const monthlyNoi = Math.round(annualNoi / 12);
-    const taxShield = Math.round(annualNoi * 0.30);
-    const taxableNoi = annualNoi - taxShield;
+    currentTerminalPage = targetPage;
 
-    // Projected 10-Yr IRR (incorporating periodic 15% escalation & 4% cap growth)
-    const irr = (yieldPct + 6.8).toFixed(1);
-    const exitVal = ((capital * 1.78) / 10000000).toFixed(2);
+    // Apply visibility to sections if multiple sections exist on current page
+    if (pageSections.length > 1) {
+      pageSections.forEach((section) => {
+        const pageIndex = parseInt(section.getAttribute('data-page-index') || section.getAttribute('data-terminal-page'), 10);
+        if (terminalViewMode === 'continuous') {
+          section.classList.remove('hidden-page');
+          section.classList.remove('active-page');
+          section.style.display = 'block';
+        } else {
+          if (pageIndex === currentTerminalPage) {
+            section.classList.remove('hidden-page');
+            section.classList.add('active-page');
+            section.style.display = 'block';
+          } else {
+            section.classList.add('hidden-page');
+            section.classList.remove('active-page');
+            section.style.display = 'none';
+          }
+        }
+      });
+    }
 
-    if (simNoiDisp) simNoiDisp.textContent = formatINR(annualNoi);
-    if (simMonthlyNoiDisp) simMonthlyNoiDisp.textContent = `Monthly Cash Inflow: ${formatINR(monthlyNoi)} / mo`;
-    if (simTaxShieldDisp) simTaxShieldDisp.textContent = `${formatINR(taxShield)} (30%)`;
-    if (simTaxableDisp) simTaxableDisp.textContent = formatINR(taxableNoi);
-    if (simIrrDisp) simIrrDisp.textContent = `${irr}% Pre-Tax`;
-    if (simAssetExitDisp) simAssetExitDisp.textContent = `₹${exitVal} Cr`;
+    // Update Pager Pills UI
+    const pills = document.querySelectorAll('.pager-pill');
+    pills.forEach(pill => {
+      const pNum = parseInt(pill.getAttribute('data-page') || pill.getAttribute('data-pager-page'), 10);
+      if (pNum === currentTerminalPage) {
+        pill.classList.add('active');
+        pill.setAttribute('aria-selected', 'true');
+      } else {
+        pill.classList.remove('active');
+        pill.setAttribute('aria-selected', 'false');
+      }
+    });
+
+    // Update Pager Bar Status Label
+    const activeLabel = document.getElementById('pagerActiveLabel');
+    const curMeta = TERMINAL_PAGES[currentTerminalPage - 1];
+    if (activeLabel && curMeta) {
+      activeLabel.textContent = curMeta.label;
+    }
+
+    if (shouldScroll) {
+      const pagerBar = document.getElementById('terminalPagerBar');
+      if (pagerBar) {
+        pagerBar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
   }
 
-  [simCapInput, simYieldInput, simEscSelect].forEach(el => {
-    if (el) el.addEventListener('input', calculateCreSimulator);
+  function prevTerminalPage() {
+    const prevPage = Math.max(1, currentTerminalPage - 1);
+    const targetUrl = MULTI_PAGE_ROUTES[prevPage] || 'index.html';
+    if (!currentPathFile.includes(targetUrl.replace('.html', '')) && currentPathFile !== targetUrl) {
+      window.location.href = targetUrl;
+    } else {
+      switchTerminalPage(prevPage, true);
+    }
+  }
+
+  function nextTerminalPage() {
+    const maxPages = 4; // 4 primary pages
+    const nextPage = Math.min(maxPages, currentTerminalPage + 1);
+    const targetUrl = MULTI_PAGE_ROUTES[nextPage] || 'contact.html';
+    if (!currentPathFile.includes(targetUrl.replace('.html', '')) && currentPathFile !== targetUrl) {
+      window.location.href = targetUrl;
+    } else {
+      switchTerminalPage(nextPage, true);
+    }
+  }
+
+  function setTerminalViewMode(mode) {
+    terminalViewMode = (mode === 'feed' || mode === 'continuous') ? 'continuous' : 'paginated';
+    const btnPaginated = document.getElementById('btnModePaginated');
+    const btnContinuous = document.getElementById('btnModeContinuous');
+
+    if (terminalViewMode === 'paginated') {
+      if (btnPaginated) btnPaginated.classList.add('active');
+      if (btnContinuous) btnContinuous.classList.remove('active');
+      showToast('📖 Paginated Deck Mode: Focused 1-Page per module');
+    } else {
+      if (btnPaginated) btnPaginated.classList.remove('active');
+      if (btnContinuous) btnContinuous.classList.add('active');
+      showToast('📜 Continuous Feed Mode: All modules visible in continuous scroll');
+    }
+    switchTerminalPage(currentTerminalPage, false);
+  }
+
+  // Keyboard Navigation: ArrowLeft, ArrowRight, and keys 1..4 across pages
+  window.addEventListener('keydown', (e) => {
+    const activeEl = document.activeElement;
+    if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'SELECT' || activeEl.tagName === 'TEXTAREA' || activeEl.isContentEditable)) {
+      return;
+    }
+    if (e.key === 'ArrowLeft') {
+      prevTerminalPage();
+    } else if (e.key === 'ArrowRight') {
+      nextTerminalPage();
+    } else if (['1', '2', '3', '4'].includes(e.key)) {
+      const pageNum = parseInt(e.key, 10);
+      const targetUrl = MULTI_PAGE_ROUTES[pageNum];
+      if (targetUrl) {
+        window.location.href = targetUrl;
+      }
+    }
   });
-  calculateCreSimulator();
 
-  // CRE Investment Memorandum Modal
-  const modalCreDossier = document.getElementById('modalCreDossier');
-  const creDossierContent = document.getElementById('creDossierContent');
+  // Global bindings for HTML onclick handlers
+  window.switchTerminalPage = switchTerminalPage;
+  window.prevTerminalPage = prevTerminalPage;
+  window.nextTerminalPage = nextTerminalPage;
+  window.setTerminalViewMode = setTerminalViewMode;
 
-  const creDossierData = {
-    hdfc: {
-      title: "HDFC Bank Retail Branch (Triple Net AAA Lease)",
-      location: "100ft Road, Indiranagar, Bengaluru (Prime High Street)",
-      tenant: "HDFC Bank Limited (India's Largest Private Bank)",
-      investment: "₹4,85,00,000 (₹4.85 Cr)",
-      rent: "₹3,55,000 / month (Paid by 5th via RTGS)",
-      yield: "8.8% Gross Annual Yield",
-      lockIn: "6 Years Lock-in (Unconditional Bank Guarantee)",
-      tenure: "9 Years Remaining (Registered Lease Deed)",
-      escalation: "15% Every 3 Years (Next escalation Nov 2027)",
-      deposit: "₹21,30,000 (6 Months Interest-Free Escrow)",
-      taxBenefit: "Section 24 Standard 30% Deduction (₹12.78 L tax-free income/yr)"
-    },
-    techpark: {
-      title: "Fortune 500 US Tech Grade-A IT Park Office",
-      location: "Prestige Tech Cloud, Outer Ring Road, Bellandur",
-      tenant: "Global Cloud Computing Enterprise (Fortune 500 US HQ)",
-      investment: "₹12,50,00,000 (₹12.50 Cr)",
-      rent: "₹9,80,000 / month",
-      yield: "9.4% Gross Annual Yield",
-      lockIn: "3 Years Lock-in",
-      tenure: "5 Years + 5 Years Option",
-      escalation: "15% Every 3 Years",
-      deposit: "₹58,80,000 (6 Months Deposit)",
-      taxBenefit: "Section 24 Standard 30% Deduction (₹35.28 L tax-free income/yr)"
-    },
-    warehouse: {
-      title: "Amazon India Logistics Fulfillment Center Hub",
-      location: "Hoskote Industrial Corridor, Bengaluru East",
-      tenant: "Amazon Transportation Services Private Limited",
-      investment: "₹18,00,000,000 (₹18.00 Cr)",
-      rent: "₹15,30,000 / month",
-      yield: "10.2% Gross Annual Yield",
-      lockIn: "5 Years Mandatory Lock-in",
-      tenure: "10 Years Triple Net (NNN) Lease",
-      escalation: "5% Compounded Annually",
-      deposit: "₹91,80,000 (6 Months Escrow Deposit)",
-      taxBenefit: "Section 24 Standard 30% Deduction (₹55.08 L tax-free income/yr)"
+  // BoQ Trade Filter state and handler
+  window.currentBoqFilter = 'all';
+  window.filterBoqTrade = function(tradeKey) {
+    window.currentBoqFilter = tradeKey;
+    const filterButtons = document.querySelectorAll('.boq-filter-pill');
+    filterButtons.forEach(btn => {
+      if (btn.getAttribute('data-trade-filter') === tradeKey) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+    if (typeof updateConstructionEstimator === 'function') {
+      updateConstructionEstimator();
     }
   };
 
-  window.openCreDossierModal = function(key) {
-    const item = creDossierData[key] || creDossierData.hdfc;
-    if (!creDossierContent) return;
+  // ====================================================================
+  // 5. PILLAR 3: Interactive Construction Cost Estimator & Material BoQ Engine (India-Specific)
+  // ====================================================================
 
-    creDossierContent.innerHTML = `
-      <div style="background:#FFFFFF; border:1px solid var(--border-card); border-radius:12px; padding:1.75rem;">
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:1px solid var(--border-card); padding-bottom:1rem; margin-bottom:1.5rem; flex-wrap:wrap; gap:0.5rem;">
+  // Configuration Matrix: City Multipliers, Quality Tiers, Material Overrides & CPWD Thumb Rules
+  const constructionCostMatrix = {
+    // 15+ Indian Cities grouped by Region with Localized Cost Multipliers (Base: 1.0)
+    cities: {
+      // Central India
+      'bhopal': { name: 'Bhopal (Central MP)', region: 'Central', tier: 'Tier 2', mult: 0.96, desc: 'Tier 2 Central Market • Low Freight Premium' },
+      'indore': { name: 'Indore (Commercial MP)', region: 'Central', tier: 'Tier 2', mult: 0.98, desc: 'Tier 2 Commercial Hub • Moderate Aggregates' },
+      'jabalpur': { name: 'Jabalpur (Mahakoshal)', region: 'Central', tier: 'Tier 2', mult: 0.94, desc: 'Tier 2 Eastern MP • Abundant Local Sand' },
+      // North India
+      'delhi-ncr': { name: 'Delhi NCR (Gurugram / Noida)', region: 'North', tier: 'Tier 1', mult: 1.18, desc: 'Tier 1 National Capital • GRAP Green Levies & High Transport' },
+      'lucknow': { name: 'Lucknow (Uttar Pradesh)', region: 'North', tier: 'Tier 2', mult: 1.02, desc: 'Tier 2 UP Capital • Standard River Sand Belt' },
+      'chandigarh': { name: 'Chandigarh Tri-City', region: 'North', tier: 'Tier 2', mult: 1.10, desc: 'Tier 2 Northern Hub • Mountain Quarry Freight' },
+      'jaipur': { name: 'Jaipur (Rajasthan)', region: 'North', tier: 'Tier 2', mult: 1.00, desc: 'Tier 2 Rajasthan Hub • Benchmark Stone & Marble Base' },
+      // West India
+      'mumbai': { name: 'Mumbai MMR (Maharashtra)', region: 'West', tier: 'Tier 1', mult: 1.38, desc: 'Tier 1 Coastal Metro • High Logistics, Sand Royalty & Labor' },
+      'pune': { name: 'Pune Metropolitan', region: 'West', tier: 'Tier 1', mult: 1.16, desc: 'Tier 1 Western IT Hub • Moderate Logistics & Labor' },
+      'ahmedabad': { name: 'Ahmedabad (Gujarat)', region: 'West', tier: 'Tier 2', mult: 1.05, desc: 'Tier 2 Industrial Hub • Abundant Cement & Ceramic Tiles' },
+      // South India
+      'bengaluru': { name: 'Bengaluru (Karnataka)', region: 'South', tier: 'Tier 1', mult: 1.15, desc: 'Tier 1 Southern Tech Capital • M-Sand Norm & Skilled Labor' },
+      'hyderabad': { name: 'Hyderabad (Telangana)', region: 'South', tier: 'Tier 1', mult: 1.12, desc: 'Tier 1 South Growth Metro • Proximity to Cement Clusters' },
+      'chennai': { name: 'Chennai (Tamil Nadu)', region: 'South', tier: 'Tier 1', mult: 1.14, desc: 'Tier 1 Coastal Metro • River Sand Restrictions & Steel Logistics' },
+      // East India
+      'kolkata': { name: 'Kolkata (West Bengal)', region: 'East', tier: 'Tier 1', mult: 1.06, desc: 'Tier 1 Eastern Hub • Primary Durgapur Steel Corridor' },
+      'patna': { name: 'Patna (Bihar)', region: 'East', tier: 'Tier 2', mult: 1.00, desc: 'Tier 2 Ganga Belt • Sone Sand Proximity' },
+      'bhubaneswar': { name: 'Bhubaneswar (Odisha)', region: 'East', tier: 'Tier 2', mult: 0.98, desc: 'Tier 2 Eastern Metro • Direct Steel Plant Proximity' }
+    },
+
+    // Construction Quality / Specification Tiers
+    qualities: {
+      'standard': {
+        name: 'Standard / Budget',
+        cement: 'local',
+        steel: 'jsw',
+        bricks: 'clay',
+        sand: 'msand',
+        flooring: 'vitrified_std',
+        joinery: 'sal_upvc'
+      },
+      'premium': {
+        name: 'Premium / Semi-Luxury',
+        cement: 'ultratech',
+        steel: 'tata',
+        bricks: 'aac',
+        sand: 'river',
+        flooring: 'vitrified_gvt',
+        joinery: 'teak_veneer'
+      },
+      'luxury': {
+        name: 'Luxury / Ultra',
+        cement: 'ultratech',
+        steel: 'tata',
+        bricks: 'aac',
+        sand: 'river',
+        flooring: 'italian_marble',
+        joinery: 'burma_teak'
+      }
+    },
+
+    // Building Height / Floor Multipliers & Surcharges
+    floors: {
+      'G': { count: 1, label: 'Ground Floor (G)', surcharge: 1.00 },
+      'G+1': { count: 2, label: 'G + 1 (Duplex)', surcharge: 1.02 },
+      'G+2': { count: 3, label: 'G + 2 (Triplex)', surcharge: 1.05 },
+      'G+3': { count: 4, label: 'G + 3 (Multi-Unit)', surcharge: 1.08 },
+      'G+4': { count: 5, label: 'G + 4 (Stilt+4)', surcharge: 1.12 }
+    },
+
+    // Material Specifications & Base Rates (Base National Standard)
+    materials: {
+      cement: {
+        'ultratech': { name: 'UltraTech Super / Weather Plus', ratePerBag: 420, grade: '53 Grade OPC / PPC (IS 12269)' },
+        'acc': { name: 'ACC Gold Water Shield', ratePerBag: 410, grade: 'Water Repellent PPC (IS 1489)' },
+        'ambuja': { name: 'Ambuja Plus Roof Special', ratePerBag: 415, grade: 'High Early Strength PPC' },
+        'dalmia': { name: 'Dalmia DSP High-Grade', ratePerBag: 390, grade: 'Durable Slag/Portland (IS 455)' },
+        'shree': { name: 'Shree Ultra / Bangur', ratePerBag: 380, grade: 'Heavy Duty 53 Grade (IS 269)' },
+        'local': { name: 'Local Regional ISI Brand', ratePerBag: 360, grade: 'Standard ISI Certified PPC' }
+      },
+      steel: {
+        'tata': { name: 'Tata Tiscon 550D Superlinks', ratePerKg: 74, grade: 'Fe-550D Primary Rebar (IS 1786)' },
+        'jsw': { name: 'JSW Neosteel Fe-550D', ratePerKg: 70, grade: 'High Ductility TMT (IS 1786)' },
+        'jindal': { name: 'Jindal Panther Fe-550D', ratePerKg: 68, grade: 'Refined Primary Steel (IS 1786)' },
+        'kamdhenu': { name: 'Kamdhenu Nxt TMT', ratePerKg: 66, grade: 'Interlocking Double Ribbed' },
+        'local': { name: 'Local Rolling Mill ISI', ratePerKg: 60, grade: 'Fe-500 ISI Rebar Standard' }
+      },
+      bricks: {
+        'clay': { name: 'Red Clay Kiln Bricks (Class 1)', ratePerUnit: 9.5, unit: 'Bricks', qtyPerSqft: 20, grade: 'Table Molded Kiln Fired' },
+        'flyash': { name: 'Fly Ash Class-F Bricks', ratePerUnit: 6.5, unit: 'Bricks', qtyPerSqft: 20, grade: 'Eco High Compression (IS 12894)' },
+        'aac': { name: 'AAC Lightweight Blocks (6"/8")', ratePerUnit: 62.0, unit: 'Blocks', qtyPerSqft: 2.4, grade: 'Autoclaved Aerated (IS 2185)' }
+      },
+      sand: {
+        'river': { name: 'Natural River Plaster Sand', ratePerCft: 65, grade: 'Triple Washed River Bed Sand' },
+        'msand': { name: 'Triple-Washed M-Sand', ratePerCft: 45, grade: 'VSI Graded Manufactured Sand (IS 383)' }
+      },
+      aggregate: {
+        'coarse': { name: 'Coarse Blue Metal Aggregate (10/20mm)', ratePerCft: 42, grade: 'IS 383 Machine Crushed Granite' }
+      },
+      flooring: {
+        'ceramic': { name: 'Basic Ceramic Anti-Skid Tiles', ratePerSqft: 45, grade: 'Regal / Johnson 1x1 & 2x2' },
+        'vitrified_std': { name: 'Vitrified Glazed Tiles (2x2)', ratePerSqft: 60, grade: 'Somany / Orientbell Nano Polished' },
+        'vitrified_gvt': { name: 'GVT Vitrified Slab Tiles (4x2)', ratePerSqft: 85, grade: 'Kajaria / Somany High Gloss Vitrified' },
+        'granite': { name: 'Polished Granite Slabs', ratePerSqft: 140, grade: 'Black Galaxy / Tan Brown Mirror Polish' },
+        'italian_marble': { name: 'Imported Italian Marble', ratePerSqft: 280, grade: 'Dyna / Bottochino Diamond Polish' }
+      },
+      joinery: {
+        'sal_upvc': { name: 'Sal Wood Frame + Flush Doors / UPVC', ratePerSqft: 280, grade: 'Prominance UPVC + Waterproof Flush Doors' },
+        'meranti_upvc': { name: 'Malaysian Meranti Wood + UPVC', ratePerSqft: 340, grade: 'Seasoned Meranti Timber + 2.5 Track UPVC' },
+        'teak_veneer': { name: 'CP Teak Frame + Teak Veneer & UPVC', ratePerSqft: 450, grade: 'CP Teak Main Door + Kommerling UPVC' },
+        'burma_teak': { name: 'Solid Burma Teak Joinery & Polish', ratePerSqft: 750, grade: '100% Seasoned Burma Teak & Architectural Brass' }
+      }
+    },
+
+    // CPWD DSR & NBC Standard Thumb Rules per Sq.Ft of Built-Up Area
+    thumbRules: {
+      cementBagsPerSqft: 0.42,
+      steelKgPerSqft: 4.0,
+      sandCftPerSqft: 2.0,
+      coarseAggCftPerSqft: 1.35,
+      flooringSqftMult: 1.15,
+      joinerySqftMult: 0.18,
+      civilLaborBaseRate: 340,
+      mepFinishingBaseRate: {
+        'standard': 220,
+        'premium': 310,
+        'luxury': 440
+      }
+    }
+  };
+
+  // State object storing latest estimate calculation
+  let cceLatestCalculation = {
+    carpetArea: 1500,
+    builtupArea: 1950,
+    floorsKey: 'G+1',
+    floorsCount: 2,
+    qualityKey: 'premium',
+    cityKey: 'bhopal',
+    cityName: 'Bhopal (Central MP)',
+    cityMult: 0.96,
+    grandTotal: 3075000,
+    minRange: 2890000,
+    maxRange: 3260000,
+    ratePerBuiltup: 1577,
+    ratePerCarpet: 2050
+  };
+
+  // DOM Elements for CCE
+  const cceCarpetArea = document.getElementById('cceCarpetArea');
+  const cceCarpetWarn = document.getElementById('cceCarpetWarn');
+  const cceAreaScopeMode = document.getElementById('cceAreaScopeMode');
+  const cceBuiltupMultiplier = document.getElementById('cceBuiltupMultiplier');
+  const cceFloors = document.getElementById('cceFloors');
+  const cceQuality = document.getElementById('cceQuality');
+  const cceCity = document.getElementById('cceCity');
+
+  // Override Selectors
+  const cceCementBrand = document.getElementById('cceCementBrand');
+  const cceSteelBrand = document.getElementById('cceSteelBrand');
+  const cceBricksType = document.getElementById('cceBricksType');
+  const cceSandType = document.getElementById('cceSandType');
+  const cceFlooringType = document.getElementById('cceFlooringType');
+  const cceJoineryType = document.getElementById('cceJoineryType');
+
+  // Display Elements
+  const cceDisplayCarpetArea = document.getElementById('cceDisplayCarpetArea');
+  const cceDisplayBuiltupArea = document.getElementById('cceDisplayBuiltupArea');
+  const cceDisplayFloorsCount = document.getElementById('cceDisplayFloorsCount');
+  const cceCityBanner = document.getElementById('cceCityBanner');
+  const cceCityPill = document.getElementById('cceCityPill');
+  const cceCityTier = document.getElementById('cceCityTier');
+  const cceTotalRange = document.getElementById('cceTotalRange');
+  const cceMedianCost = document.getElementById('cceMedianCost');
+  const cceRatePerSqft = document.getElementById('cceRatePerSqft');
+  const cceRateCarpetSqft = document.getElementById('cceRateCarpetSqft');
+  const cceMetaChips = document.getElementById('cceMetaChips');
+  const cceTableBody = document.getElementById('cceTableBody');
+  const cceTableFootTotal = document.getElementById('cceTableFootTotal');
+  const cceSplitBadge = document.getElementById('cceSplitBadge');
+  const cceDonutArcs = document.getElementById('cceDonutArcs');
+  const cceDonutCenterVal = document.getElementById('cceDonutCenterVal');
+  const cceChartLegend = document.getElementById('cceChartLegend');
+  const cceEscrowStepsGrid = document.getElementById('cceEscrowStepsGrid');
+
+  // Quick Preset Handlers
+  window.setCceCarpetArea = function(val) {
+    if (cceCarpetArea) {
+      cceCarpetArea.value = val;
+      document.querySelectorAll('.cce-pill-btn').forEach(btn => {
+        if (btn.textContent.includes(val.toLocaleString('en-IN'))) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+      updateConstructionEstimator();
+    }
+  };
+
+  window.setCceFloors = function(floorKey) {
+    if (cceFloors) {
+      cceFloors.value = floorKey;
+      document.querySelectorAll('.cce-floor-btn').forEach(btn => {
+        if (btn.getAttribute('data-floor') === floorKey) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+      updateConstructionEstimator();
+    }
+  };
+
+  window.setCceQuality = function(qualityKey) {
+    if (cceQuality) {
+      cceQuality.value = qualityKey;
+      document.querySelectorAll('.cce-quality-card').forEach(card => {
+        card.classList.remove('active');
+      });
+      const targetCard = qualityKey === 'standard' ? document.getElementById('qCardStandard') :
+                         qualityKey === 'premium' ? document.getElementById('qCardPremium') :
+                         document.getElementById('qCardLuxury');
+      if (targetCard) targetCard.classList.add('active');
+
+      // Auto-set override selectors to tier defaults
+      const defaults = constructionCostMatrix.qualities[qualityKey] || constructionCostMatrix.qualities.premium;
+      if (cceCementBrand) cceCementBrand.value = defaults.cement;
+      if (cceSteelBrand) cceSteelBrand.value = defaults.steel;
+      if (cceBricksType) cceBricksType.value = defaults.bricks;
+      if (cceSandType) cceSandType.value = defaults.sand;
+      if (cceFlooringType) cceFlooringType.value = defaults.flooring;
+      if (cceJoineryType) cceJoineryType.value = defaults.joinery;
+
+      updateConstructionEstimator();
+    }
+  };
+
+  window.toggleCceOverrides = function() {
+    const body = document.getElementById('cceOverridesBody');
+    const icon = document.getElementById('cceOverridesToggleIcon');
+    if (body) {
+      body.classList.toggle('collapsed');
+      if (icon) {
+        icon.textContent = body.classList.contains('collapsed') ? '▼ Expand Overrides' : '▲ Collapse Overrides';
+      }
+    }
+  };
+
+  window.resetCceOverrides = function() {
+    const qualityKey = cceQuality ? cceQuality.value : 'premium';
+    window.setCceQuality(qualityKey);
+    showToast('↺ Material brands reset to ' + qualityKey.toUpperCase() + ' tier defaults.');
+  };
+
+  // Main Reactive Engine
+  function updateConstructionEstimator() {
+    if (!cceCarpetArea || !cceTableBody) return;
+
+    const rawCarpet = parseFloat(cceCarpetArea.value);
+    let carpetInput = 1500;
+
+    if (isNaN(rawCarpet) || rawCarpet < 100) {
+      if (cceCarpetWarn) {
+        cceCarpetWarn.style.display = 'flex';
+        cceCarpetWarn.textContent = '⚠️ Minimum carpet area is 100 sq.ft for standard structural engineering thumb rules.';
+      }
+      carpetInput = Math.max(100, isNaN(rawCarpet) ? 100 : Math.abs(rawCarpet));
+    } else if (rawCarpet > 100000) {
+      if (cceCarpetWarn) {
+        cceCarpetWarn.style.display = 'flex';
+        cceCarpetWarn.textContent = '⚠️ Maximum carpet area threshold is 100,000 sq.ft for standard residential/commercial algorithm.';
+      }
+      carpetInput = 100000;
+    } else {
+      if (cceCarpetWarn) {
+        cceCarpetWarn.style.display = 'none';
+      }
+      carpetInput = rawCarpet;
+    }
+
+    const areaMode = cceAreaScopeMode ? cceAreaScopeMode.value : 'total';
+    const builtupMult = cceBuiltupMultiplier ? (parseFloat(cceBuiltupMultiplier.value) || 1.30) : 1.30;
+    const floorKey = cceFloors ? cceFloors.value : 'G+1';
+    const qualityKey = cceQuality ? cceQuality.value : 'premium';
+    const cityKey = cceCity ? cceCity.value : 'bhopal';
+
+    const floorObj = constructionCostMatrix.floors[floorKey] || constructionCostMatrix.floors['G+1'];
+    const cityObj = constructionCostMatrix.cities[cityKey] || constructionCostMatrix.cities['bhopal'];
+    const thumb = constructionCostMatrix.thumbRules;
+
+    // Calculate usable carpet and total built-up
+    let totalCarpet = carpetInput;
+    if (areaMode === 'per_floor') {
+      totalCarpet = Math.round(carpetInput * floorObj.count);
+    }
+    const totalBuiltup = Math.round(totalCarpet * builtupMult);
+
+    // Update Banner Displays
+    if (cceDisplayCarpetArea) cceDisplayCarpetArea.textContent = `${totalCarpet.toLocaleString('en-IN')} sq.ft`;
+    if (cceDisplayBuiltupArea) cceDisplayBuiltupArea.textContent = `${totalBuiltup.toLocaleString('en-IN')} sq.ft`;
+    if (cceDisplayFloorsCount) cceDisplayFloorsCount.textContent = `${floorObj.count} Level${floorObj.count > 1 ? 's' : ''} (${floorKey})`;
+
+    // Update City Banner
+    if (cceCityPill) {
+      const diffPct = Math.round((cityObj.mult - 1.0) * 100);
+      const sign = diffPct > 0 ? `+${diffPct}%` : (diffPct < 0 ? `${diffPct}%` : 'Base');
+      cceCityPill.textContent = `📍 ${cityObj.name} • Index: ${cityObj.mult.toFixed(2)}x (${sign} vs Base)`;
+    }
+    if (cceCityTier) {
+      cceCityTier.textContent = cityObj.desc;
+    }
+
+    // Material Brand Selections
+    const cementKey = cceCementBrand ? cceCementBrand.value : 'ultratech';
+    const steelKey = cceSteelBrand ? cceSteelBrand.value : 'tata';
+    const brickKey = cceBricksType ? cceBricksType.value : 'aac';
+    const sandKey = cceSandType ? cceSandType.value : 'river';
+    const flooringKey = cceFlooringType ? cceFlooringType.value : 'vitrified_gvt';
+    const joineryKey = cceJoineryType ? cceJoineryType.value : 'teak_veneer';
+
+    const cementObj = constructionCostMatrix.materials.cement[cementKey] || constructionCostMatrix.materials.cement['ultratech'];
+    const steelObj = constructionCostMatrix.materials.steel[steelKey] || constructionCostMatrix.materials.steel['tata'];
+    const brickObj = constructionCostMatrix.materials.bricks[brickKey] || constructionCostMatrix.materials.bricks['aac'];
+    const sandObj = constructionCostMatrix.materials.sand[sandKey] || constructionCostMatrix.materials.sand['river'];
+    const aggObj = constructionCostMatrix.materials.aggregate['coarse'];
+    const flooringObj = constructionCostMatrix.materials.flooring[flooringKey] || constructionCostMatrix.materials.flooring['vitrified_gvt'];
+    const joineryObj = constructionCostMatrix.materials.joinery[joineryKey] || constructionCostMatrix.materials.joinery['teak_veneer'];
+
+    // 1. Fe-550D TMT Steel Rebar
+    const steelKg = Math.round(totalBuiltup * thumb.steelKgPerSqft);
+    const steelTonnes = (steelKg / 1000).toFixed(2);
+    const steelUnitRate = Math.round(steelObj.ratePerKg * cityObj.mult);
+    const steelCost = Math.round(steelKg * steelUnitRate);
+
+    // 2. OPC / PPC Cement
+    const cementBags = Math.round(totalBuiltup * thumb.cementBagsPerSqft);
+    const cementUnitRate = Math.round(cementObj.ratePerBag * cityObj.mult);
+    const cementCost = Math.round(cementBags * cementUnitRate);
+
+    // 3. Sand / Fine Aggregate
+    const sandCft = Math.round(totalBuiltup * thumb.sandCftPerSqft);
+    const sandUnitRate = Math.round(sandObj.ratePerCft * cityObj.mult);
+    const sandCost = Math.round(sandCft * sandUnitRate);
+
+    // 4. Coarse Aggregate (10/20mm)
+    const aggCft = Math.round(totalBuiltup * thumb.coarseAggCftPerSqft);
+    const aggUnitRate = Math.round(aggObj.ratePerCft * cityObj.mult);
+    const aggCost = Math.round(aggCft * aggUnitRate);
+
+    // 5. Masonry Bricks / AAC Blocks
+    const brickQty = Math.round(totalBuiltup * brickObj.qtyPerSqft);
+    const brickUnitRate = Math.round(brickObj.ratePerUnit * cityObj.mult * 10) / 10;
+    const brickCost = Math.round(brickQty * brickUnitRate);
+
+    // 6. Flooring & Wall Cladding
+    const flooringSqft = Math.round(totalBuiltup * thumb.flooringSqftMult);
+    const flooringUnitRate = Math.round(flooringObj.ratePerSqft * cityObj.mult);
+    const flooringCost = Math.round(flooringSqft * flooringUnitRate);
+
+    // 7. Woodwork, Joinery & Windows
+    const joinerySqft = Math.round(totalBuiltup * thumb.joinerySqftMult);
+    const joineryUnitRate = Math.round(joineryObj.ratePerSqft * cityObj.mult);
+    const joineryCost = Math.round(joinerySqft * joineryUnitRate);
+
+    // 8. Civil Masonry & Structural Labor
+    const civilLaborRate = Math.round(thumb.civilLaborBaseRate * cityObj.mult * floorObj.surcharge);
+    const civilLaborCost = Math.round(totalBuiltup * civilLaborRate);
+
+    // 9. MEP (Electrical, Plumbing, Painting & Snagging)
+    const mepBase = thumb.mepFinishingBaseRate[qualityKey] || 310;
+    const mepRate = Math.round(mepBase * cityObj.mult);
+    const mepCost = Math.round(totalBuiltup * mepRate);
+
+    // Grand Total & Volatility Range (±6%)
+    const grandTotal = steelCost + cementCost + sandCost + aggCost + brickCost + flooringCost + joineryCost + civilLaborCost + mepCost;
+    const minRange = Math.round(grandTotal * 0.94);
+    const maxRange = Math.round(grandTotal * 1.06);
+    const ratePerBuiltup = Math.round(grandTotal / totalBuiltup);
+    const ratePerCarpet = Math.round(grandTotal / totalCarpet);
+
+    // High level split: Materials vs Labor
+    const totalMaterials = steelCost + cementCost + sandCost + aggCost + brickCost + flooringCost + joineryCost;
+    const totalLabor = civilLaborCost + mepCost;
+    const matPct = Math.round((totalMaterials / grandTotal) * 100);
+    const labPct = 100 - matPct;
+
+    // Cache latest calculation
+    cceLatestCalculation = {
+      carpetArea: totalCarpet,
+      builtupArea: totalBuiltup,
+      floorsKey: floorKey,
+      floorsCount: floorObj.count,
+      qualityKey: qualityKey,
+      cityKey: cityKey,
+      cityName: cityObj.name,
+      cityMult: cityObj.mult,
+      grandTotal: grandTotal,
+      minRange: minRange,
+      maxRange: maxRange,
+      ratePerBuiltup: ratePerBuiltup,
+      ratePerCarpet: ratePerCarpet
+    };
+
+    // Update Summary Card
+    if (cceTotalRange) cceTotalRange.textContent = `${formatINR(minRange)} – ${formatINR(maxRange)}`;
+    if (cceMedianCost) cceMedianCost.textContent = formatINR(grandTotal);
+    if (cceRatePerSqft) cceRatePerSqft.textContent = `${formatINR(ratePerBuiltup)} / sq.ft`;
+    if (cceRateCarpetSqft) cceRateCarpetSqft.textContent = `${formatINR(ratePerCarpet)} / sq.ft`;
+
+    if (cceMetaChips) {
+      cceMetaChips.innerHTML = `
+        <span class="cce-chip">Carpet: <strong>${totalCarpet.toLocaleString('en-IN')} sq.ft</strong></span>
+        <span class="cce-chip">Built-Up: <strong>${totalBuiltup.toLocaleString('en-IN')} sq.ft</strong></span>
+        <span class="cce-chip">Structure: <strong>${floorKey} (${floorObj.count} Levels)</strong></span>
+        <span class="cce-chip">Location: <strong>${cityObj.name.split(' (')[0]} (${cityObj.mult.toFixed(2)}x)</strong></span>
+        <span class="cce-chip">Tier: <strong>${qualityKey.toUpperCase()}</strong></span>
+      `;
+    }
+
+    if (cceSplitBadge) {
+      cceSplitBadge.textContent = `MATERIALS ~${matPct}% • LABOR ~${labPct}%`;
+    }
+
+    // Itemized Items list with Trade Categories
+    const items = [
+      {
+        name: 'Structural Steel Rebar (Fe-550D)',
+        trade: 'structural',
+        brand: `${steelObj.name} (${steelObj.grade})`,
+        qty: `${steelTonnes} MT (${steelKg.toLocaleString('en-IN')} kg)`,
+        rate: `₹${steelUnitRate} / kg`,
+        cost: steelCost,
+        share: Math.round((steelCost / grandTotal) * 100)
+      },
+      {
+        name: 'OPC / PPC Structural Cement',
+        trade: 'structural',
+        brand: `${cementObj.name} (${cementObj.grade})`,
+        qty: `${cementBags.toLocaleString('en-IN')} Bags (50kg)`,
+        rate: `₹${cementUnitRate} / Bag`,
+        cost: cementCost,
+        share: Math.round((cementCost / grandTotal) * 100)
+      },
+      {
+        name: 'Plaster & Concrete Sand',
+        trade: 'structural',
+        brand: `${sandObj.name} (${sandObj.grade})`,
+        qty: `${sandCft.toLocaleString('en-IN')} Cu.Ft (${(sandCft / 100).toFixed(1)} Brass)`,
+        rate: `₹${sandUnitRate} / Cu.Ft`,
+        cost: sandCost,
+        share: Math.round((sandCost / grandTotal) * 100)
+      },
+      {
+        name: 'Coarse Aggregates (10/20mm)',
+        trade: 'structural',
+        brand: `${aggObj.name} (${aggObj.grade})`,
+        qty: `${aggCft.toLocaleString('en-IN')} Cu.Ft (${(aggCft / 100).toFixed(1)} Brass)`,
+        rate: `₹${aggUnitRate} / Cu.Ft`,
+        cost: aggCost,
+        share: Math.round((aggCost / grandTotal) * 100)
+      },
+      {
+        name: 'Wall Masonry Infill (Bricks / AAC)',
+        trade: 'structural',
+        brand: `${brickObj.name} (${brickObj.grade})`,
+        qty: `${brickQty.toLocaleString('en-IN')} ${brickObj.unit}`,
+        rate: `₹${brickUnitRate} / ${brickObj.unit === 'Blocks' ? 'Block' : 'Pc'}`,
+        cost: brickCost,
+        share: Math.round((brickCost / grandTotal) * 100)
+      },
+      {
+        name: 'Flooring, Skirting & Wall Dado',
+        trade: 'finishing',
+        brand: `${flooringObj.name} (${flooringObj.grade})`,
+        qty: `${flooringSqft.toLocaleString('en-IN')} sq.ft`,
+        rate: `₹${flooringUnitRate} / sq.ft`,
+        cost: flooringCost,
+        share: Math.round((flooringCost / grandTotal) * 100)
+      },
+      {
+        name: 'Doors, Windows & Joinery',
+        trade: 'finishing',
+        brand: `${joineryObj.name} (${joineryObj.grade})`,
+        qty: `${joinerySqft.toLocaleString('en-IN')} sq.ft`,
+        rate: `₹${joineryUnitRate} / sq.ft`,
+        cost: joineryCost,
+        share: Math.round((joineryCost / grandTotal) * 100)
+      },
+      {
+        name: 'Civil Masonry & Structural Labor',
+        trade: 'labor',
+        brand: 'CPWD 2026 Manday Norms (Masonry, Shuttering & Bar-Bending)',
+        qty: `${totalBuiltup.toLocaleString('en-IN')} sq.ft built-up`,
+        rate: `₹${civilLaborRate} / sq.ft`,
+        cost: civilLaborCost,
+        share: Math.round((civilLaborCost / grandTotal) * 100)
+      },
+      {
+        name: 'MEP (Electrical, Plumbing & Paint)',
+        trade: 'labor',
+        brand: 'Polycab/Havells Wires, Finolex/Astral CPVC, Asian Paints Royale',
+        qty: `${totalBuiltup.toLocaleString('en-IN')} sq.ft built-up`,
+        rate: `₹${mepRate} / sq.ft`,
+        cost: mepCost,
+        share: Math.round((mepCost / grandTotal) * 100)
+      }
+    ];
+
+    // Render Table with Active Trade Category Filter
+    const activeFilter = window.currentBoqFilter || 'all';
+    const visibleItems = activeFilter === 'all'
+      ? items
+      : items.filter(it => it.trade === activeFilter);
+
+    let tableHtml = '';
+    let filteredSubtotal = 0;
+    visibleItems.forEach(item => {
+      filteredSubtotal += item.cost;
+      tableHtml += `
+        <tr>
+          <td><strong>${escapeHTML(item.name)}</strong></td>
+          <td>${escapeHTML(item.brand)}</td>
+          <td><strong>${escapeHTML(item.qty)}</strong></td>
+          <td>${escapeHTML(item.rate)}</td>
+          <td><strong style="color:var(--navy-authority);">${formatINR(item.cost)}</strong></td>
+          <td><span style="font-size:0.78rem; font-weight:700; color:var(--text-muted);">${item.share}%</span></td>
+        </tr>
+      `;
+    });
+    cceTableBody.innerHTML = tableHtml;
+    if (cceTableFootTotal) {
+      if (activeFilter === 'all') {
+        cceTableFootTotal.innerHTML = `<strong>${formatINR(grandTotal)}</strong>`;
+      } else {
+        cceTableFootTotal.innerHTML = `<strong>${formatINR(filteredSubtotal)}</strong> <span style="font-size:0.76rem; color:var(--text-muted); font-weight:600; margin-left:0.4rem;">(Filtered / Total ${formatINR(grandTotal)})</span>`;
+      }
+    }
+
+    // Render SVG Donut Chart & Color Legend
+    const chartCategories = [
+      { name: 'Structural Steel (TMT)', cost: steelCost, color: '#3B82F6' },
+      { name: 'Cement & Concrete', cost: cementCost, color: '#D97706' },
+      { name: 'Sand, Aggregate & Bricks', cost: sandCost + aggCost + brickCost, color: '#10B981' },
+      { name: 'Flooring, Wood & Finish', cost: flooringCost + joineryCost, color: '#8B5CF6' },
+      { name: 'Civil Labor & MEP Trades', cost: civilLaborCost + mepCost, color: '#0F172A' }
+    ];
+
+    const radius = 70;
+    const circ = 2 * Math.PI * radius; // ~439.82
+    let currentOffset = 0;
+    let arcsHtml = '';
+    let legendHtml = '';
+
+    chartCategories.forEach(cat => {
+      const pct = (cat.cost / grandTotal);
+      const arcLen = pct * circ;
+      arcsHtml += `
+        <circle cx="100" cy="100" r="${radius}" fill="transparent"
+                stroke="${cat.color}" stroke-width="26"
+                stroke-dasharray="${arcLen.toFixed(2)} ${(circ - arcLen).toFixed(2)}"
+                stroke-dashoffset="${(-currentOffset).toFixed(2)}"
+                style="transition: stroke-dasharray 0.5s ease, stroke-dashoffset 0.5s ease;">
+          <title>${cat.name}: ${formatINR(cat.cost)} (${Math.round(pct * 100)}%)</title>
+        </circle>
+      `;
+      currentOffset += arcLen;
+
+      legendHtml += `
+        <div class="cce-legend-item">
+          <div class="cce-legend-name-wrap">
+            <span class="cce-legend-dot" style="background:${cat.color};"></span>
+            <span class="cce-legend-name">${cat.name}</span>
+          </div>
+          <div class="cce-legend-stat">
+            <span>${formatINR(cat.cost)}</span>
+            <span class="cce-legend-pct">(${Math.round(pct * 100)}%)</span>
+          </div>
+        </div>
+      `;
+    });
+
+    if (cceDonutArcs) cceDonutArcs.innerHTML = arcsHtml;
+    if (cceDonutCenterVal) {
+      const lakhs = (grandTotal / 100000).toFixed(1);
+      cceDonutCenterVal.textContent = `₹${lakhs}L`;
+    }
+    if (cceChartLegend) cceChartLegend.innerHTML = legendHtml;
+
+    // Render Milestone Escrow Schedule with dynamic ₹ amounts
+    if (cceEscrowStepsGrid) {
+      const tranches = [
+        { pct: 15, name: 'Foundation & Plinth', trigger: 'Excavation, PCC, footings and plinth beam casting completed.' },
+        { pct: 30, name: 'RCC Superstructure', trigger: 'Columns, floor beams and roof slab de-shuttering completed.' },
+        { pct: 20, name: 'Brickwork & Conduits', trigger: 'External masonry, internal partitions and electrical pipings.' },
+        { pct: 20, name: 'Plastering & Flooring', trigger: 'Internal plaster, vitrified flooring & sanitary fixtures fitted.' },
+        { pct: 15, name: 'Snagging & Handover', trigger: 'Doors, windows, final 2 coats Asian Paints, deep cleaning & keys.' }
+      ];
+
+      let escrowHtml = '';
+      tranches.forEach(tranche => {
+        const amount = Math.round(grandTotal * (tranche.pct / 100));
+        escrowHtml += `
+          <div class="escrow-step-item">
+            <div class="step-pct">${tranche.pct}%</div>
+            <div class="step-amt">${formatINR(amount)}</div>
+            <div class="step-phase">${tranche.name}</div>
+            <div class="step-trigger">${tranche.trigger}</div>
+          </div>
+        `;
+      });
+      cceEscrowStepsGrid.innerHTML = escrowHtml;
+    }
+
+    // Update Live Site Material & Labor Quantities (Card 5)
+    const elQtyCement = document.getElementById('cceQtyCementVal');
+    const elQtySteel = document.getElementById('cceQtySteelVal');
+    const elQtySand = document.getElementById('cceQtySandVal');
+    const elQtyAgg = document.getElementById('cceQtyAggVal');
+    const elQtyMasonry = document.getElementById('cceQtyMasonryVal');
+    const elQtyWater = document.getElementById('cceQtyWaterVal');
+    const elQtyLabor = document.getElementById('cceQtyLaborVal');
+
+    if (elQtyCement) elQtyCement.textContent = `${cementBags.toLocaleString('en-IN')} Bags (50kg)`;
+    if (elQtySteel) elQtySteel.textContent = `${steelTonnes} MT (${steelKg.toLocaleString('en-IN')} kg)`;
+    if (elQtySand) elQtySand.textContent = `${(sandCft / 100).toFixed(1)} Brass (${sandCft.toLocaleString('en-IN')} cft)`;
+    if (elQtyAgg) elQtyAgg.textContent = `${(aggCft / 100).toFixed(1)} Brass (${aggCft.toLocaleString('en-IN')} cft)`;
+    if (elQtyMasonry) {
+      if (brickKey === 'aac') {
+        elQtyMasonry.textContent = `${brickQty.toLocaleString('en-IN')} AAC Blocks`;
+      } else {
+        elQtyMasonry.textContent = `${brickQty.toLocaleString('en-IN')} Red Clay Bricks`;
+      }
+    }
+    if (elQtyWater) {
+      const waterLitres = Math.round(totalBuiltup * 135);
+      elQtyWater.textContent = `${(waterLitres / 1000).toFixed(1)}k Litres (IS 456)`;
+    }
+    if (elQtyLabor) {
+      const mandays = Math.round(totalBuiltup * 0.72);
+      elQtyLabor.textContent = `~${mandays.toLocaleString('en-IN')} Total Man-Days`;
+    }
+  }
+
+  // Attach event listeners for real-time reactivity
+  [cceCarpetArea, cceAreaScopeMode, cceBuiltupMultiplier, cceCity, cceCementBrand, cceSteelBrand, cceBricksType, cceSandType, cceFlooringType, cceJoineryType].forEach(el => {
+    if (el) {
+      el.addEventListener('change', updateConstructionEstimator);
+      el.addEventListener('input', updateConstructionEstimator);
+    }
+  });
+
+  // Initial calculation trigger
+  updateConstructionEstimator();
+
+  // Extensible Data Layer: Load external rates.json if served via HTTP
+  if (typeof fetch === 'function' && window.location.protocol.startsWith('http')) {
+    fetch('rates.json')
+      .then(res => {
+        if (!res.ok) throw new Error('Rates file unavailable');
+        return res.json();
+      })
+      .then(data => {
+        if (data && data.cities && data.materials) {
+          Object.assign(constructionCostMatrix.cities, data.cities);
+          Object.assign(constructionCostMatrix.materials, data.materials);
+          if (data.thumbRules) Object.assign(constructionCostMatrix.thumbRules, data.thumbRules);
+          if (data.qualities) Object.assign(constructionCostMatrix.qualities, data.qualities);
+          updateConstructionEstimator();
+        }
+      })
+      .catch(() => {
+        // Built-in matrix remains active
+      });
+  }
+
+  // Print Quote Handler
+  window.printConstructionQuote = function() {
+    const printIdEl = document.getElementById('printQuoteId');
+    const printDateEl = document.getElementById('printQuoteDate');
+    const randomRef = Math.floor(1000 + Math.random() * 9000);
+    const today = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    if (printIdEl) printIdEl.textContent = `EXA-EST-2026-${randomRef}`;
+    if (printDateEl) printDateEl.textContent = `Date: ${today}`;
+    window.print();
+  };
+
+  // Contractor Callback & Email Quote Modal
+  const modalCostEstimatorCallback = document.getElementById('modalCostEstimatorCallback');
+  const costEstimatorCallbackContent = document.getElementById('costEstimatorCallbackContent');
+
+  window.openCostEstimatorCallbackModal = function() {
+    if (!costEstimatorCallbackContent || !modalCostEstimatorCallback) return;
+    const calc = cceLatestCalculation;
+
+    costEstimatorCallbackContent.innerHTML = `
+      <div style="background:#FFFFFF; border:1px solid var(--border-card); border-radius:12px; padding:2rem;">
+        <div style="border-bottom:2px solid var(--saffron-600); padding-bottom:1rem; margin-bottom:1.5rem;">
+          <span style="font-size:0.75rem; color:var(--saffron-700); font-family:var(--font-main); font-weight:800; letter-spacing:0.05em;">CPWD VERIFIED CONTRACTOR CONNECT</span>
+          <h2 style="font-size:1.35rem; font-weight:800; color:var(--navy-authority); margin:0.3rem 0;">Request Verified Contractor Callback &amp; Email Estimate</h2>
+          <div style="font-size:0.8rem; color:var(--text-muted);">RECEIVE ITEMIZED PDF ESTIMATE + 3 PRE-SCREENED LOCAL BUILDER QUOTES</div>
+        </div>
+
+        <!-- Selected Project Summary Banner -->
+        <div style="background:var(--bg-subtle); border:1px solid var(--border-card); border-radius:8px; padding:1rem; margin-bottom:1.5rem; display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:0.75rem;">
           <div>
-            <span class="cre-tenant-pill">${escapeHTML(item.tenant)}</span>
-            <h2 style="font-size:1.5rem; font-weight:800; color:var(--navy-authority); margin:0.4rem 0 0.2rem 0;">${escapeHTML(item.title)}</h2>
-            <div style="font-size:0.85rem; color:var(--text-muted);">📍 ${escapeHTML(item.location)}</div>
+            <span style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">LOCATION:</span>
+            <div style="font-size:0.88rem; font-weight:800; color:var(--navy-authority);">${escapeHTML(calc.cityName)}</div>
           </div>
-          <div style="text-align:right;">
-            <div style="font-size:1.75rem; font-weight:800; color:var(--emerald-600); font-family:var(--font-main); font-variant-numeric:tabular-nums;">${escapeHTML(item.yield)}</div>
-            <div style="font-size:0.8rem; color:var(--text-muted); font-weight:600;">Pre-Tax Cap Rate</div>
+          <div>
+            <span style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">BUILT-UP AREA:</span>
+            <div style="font-size:0.88rem; font-weight:800; color:var(--navy-authority);">${calc.builtupArea.toLocaleString('en-IN')} sq.ft (${calc.floorsKey})</div>
           </div>
-        </div>
-
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.5rem;">
-          <div style="background:var(--bg-subtle); padding:1rem 1.25rem; border-radius:10px; border:1px solid var(--border-card);">
-            <span style="font-size:0.75rem; color:var(--text-muted); display:block; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.25rem;">PURCHASE CONSIDERATION</span>
-            <strong style="font-size:1.3rem; color:var(--saffron-700); font-family:var(--font-main); font-variant-numeric:tabular-nums; font-weight:800;">${escapeHTML(item.investment)}</strong>
+          <div>
+            <span style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">QUALITY TIER:</span>
+            <div style="font-size:0.88rem; font-weight:800; color:var(--navy-authority);">${calc.qualityKey.toUpperCase()}</div>
           </div>
-          <div style="background:var(--bg-subtle); padding:1rem 1.25rem; border-radius:10px; border:1px solid var(--border-card);">
-            <span style="font-size:0.75rem; color:var(--text-muted); display:block; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.25rem;">MONTHLY RENTAL INFLOW</span>
-            <strong style="font-size:1.3rem; color:var(--navy-authority); font-family:var(--font-main); font-variant-numeric:tabular-nums; font-weight:800;">${escapeHTML(item.rent)}</strong>
-          </div>
-          <div style="background:var(--bg-subtle); padding:1rem; border-radius:8px; border:1px solid var(--border-card);">
-            <span style="font-size:0.75rem; color:var(--text-muted); display:block; font-weight:600;">LEASE LOCK-IN & COVENANT</span>
-            <strong style="font-size:1rem; color:var(--navy-authority);">${escapeHTML(item.lockIn)}</strong>
-          </div>
-          <div style="background:var(--bg-subtle); padding:1rem; border-radius:8px; border:1px solid var(--border-card);">
-            <span style="font-size:0.75rem; color:var(--text-muted); display:block; font-weight:600;">RENT ESCALATION CLAUSE</span>
-            <strong style="font-size:1rem; color:var(--navy-authority);">${escapeHTML(item.escalation)}</strong>
+          <div>
+            <span style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">ESTIMATED BUDGET:</span>
+            <div style="font-size:0.88rem; font-weight:800; color:var(--saffron-700);">${formatINR(calc.minRange)} – ${formatINR(calc.maxRange)}</div>
           </div>
         </div>
 
-        <div style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:1rem; margin-bottom:1.5rem;">
-          <strong style="color:var(--emerald-600); font-size:0.9rem;">✓ INSTITUTIONAL DUE DILIGENCE COMPLETED:</strong>
-          <p style="font-size:0.85rem; color:#334155; margin:0.35rem 0 0 0;">
-            Original registered lease deed inspected. Direct bank NOC available for immediate transfer of title without municipal encumbrances.
-          </p>
-        </div>
+        <form id="formCostEstimatorLead" onsubmit="submitCostEstimatorLead(event)">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+            <div>
+              <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--navy-authority); margin-bottom:0.35rem;">Full Name *</label>
+              <input type="text" id="leadName" class="form-control-terminal" placeholder="e.g. Chetan Bisariya" required>
+            </div>
+            <div>
+              <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--navy-authority); margin-bottom:0.35rem;">WhatsApp / Mobile Number *</label>
+              <input type="tel" id="leadPhone" class="form-control-terminal" placeholder="10-digit mobile number" pattern="[0-9]{10}" required>
+            </div>
+          </div>
 
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
-          <button type="button" class="btn btn-secondary btn-sm" onclick="showToast('📄 Full 18-page Investment Memorandum (IM) downloaded!')">
-            <span>Download Full 18-Page IM (PDF)</span>
-          </button>
-          <button type="button" class="btn btn-primary btn-sm" onclick="showToast('🤝 Request forwarded to Institutional Asset Desk! Our Senior Partner will contact you within 2 hours.'); closeModal(document.getElementById('modalCreDossier'));">
-            <span>Request Seller DD Access & Site Visit &rarr;</span>
-          </button>
-        </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+            <div>
+              <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--navy-authority); margin-bottom:0.35rem;">Email Address (for PDF BoQ) *</label>
+              <input type="email" id="leadEmail" class="form-control-terminal" placeholder="name@domain.com" required>
+            </div>
+            <div>
+              <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--navy-authority); margin-bottom:0.35rem;">Target Start Timeline</label>
+              <select id="leadTimeline" class="form-control-terminal">
+                <option value="Immediate (< 15 days)">Immediate (Within 15 days)</option>
+                <option value="1 to 2 months" selected>1 to 2 Months</option>
+                <option value="3 to 6 months">3 to 6 Months (Planning)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-bottom:1.25rem;">
+            <label style="display:block; font-size:0.8rem; font-weight:700; color:var(--navy-authority); margin-bottom:0.35rem;">Plot Location / Site Locality</label>
+            <input type="text" id="leadAddress" class="form-control-terminal" placeholder="e.g. Arera Colony, Bhopal / HSR Layout, Bengaluru">
+          </div>
+
+          <div style="background:#FFFBEB; border:1px solid #FDE68A; padding:0.75rem 1rem; border-radius:6px; margin-bottom:1.5rem; font-size:0.76rem; color:#92400E; display:flex; gap:0.5rem; align-items:center;">
+            <span>🛡️</span>
+            <span>All referred contractors are RERA-verified with verified structural civil track records and sign milestone-based escrow deeds.</span>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="closeModal(document.getElementById('modalCostEstimatorCallback'))">
+              <span>Cancel</span>
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <span>Submit &amp; Email Formal Estimate &rarr;</span>
+            </button>
+          </div>
+        </form>
       </div>
     `;
 
-    openModal(modalCreDossier);
+    openModal(modalCostEstimatorCallback);
   };
 
-  // ====================================================================
-  // 5. PILLAR 3: Construction BoQ Cost Engine & Contractor Escrow
-  // ====================================================================
-  const boqArea = document.getElementById('boqArea');
-  const boqStructure = document.getElementById('boqStructure');
-  const boqTier = document.getElementById('boqTier');
-  const boqCityIndex = document.getElementById('boqCityIndex');
-  const boqTableBody = document.getElementById('boqTableBody');
-  const boqTotalCost = document.getElementById('boqTotalCost');
-  const boqRatePerSqft = document.getElementById('boqRatePerSqft');
+  window.submitCostEstimatorLead = function(event) {
+    if (event) event.preventDefault();
+    const leadName = document.getElementById('leadName');
+    const leadPhone = document.getElementById('leadPhone');
+    const leadEmail = document.getElementById('leadEmail');
 
-  function calculateBoQ() {
-    if (!boqArea || !boqTableBody) return;
+    if (!leadName || !leadPhone || !leadEmail) return;
 
-    const area = parseFloat(boqArea.value) || 2000;
-    const tier = boqTier ? boqTier.value : 'Standard';
-    const city = boqCityIndex ? boqCityIndex.value : 'Bengaluru';
+    const nameVal = escapeHTML(leadName.value.trim());
+    const phoneVal = escapeHTML(leadPhone.value.trim());
+    const emailVal = escapeHTML(leadEmail.value.trim());
+    const refId = 'EXA-BOQ-' + Math.floor(10000 + Math.random() * 90000);
 
-    let baseRate = 1950;
-    if (tier === 'Basic') baseRate = 1650;
-    else if (tier === 'Standard') baseRate = 1950;
-    else if (tier === 'Premium') baseRate = 2450;
-    else if (tier === 'Ultra-Luxury') baseRate = 3200;
+    if (costEstimatorCallbackContent) {
+      costEstimatorCallbackContent.innerHTML = `
+        <div style="background:#FFFFFF; border:1px solid var(--border-card); border-radius:12px; padding:2.5rem; text-align:center;">
+          <div style="width:60px; height:60px; border-radius:50%; background:var(--emerald-light); color:var(--emerald-600); font-size:1.8rem; display:flex; align-items:center; justify-content:center; margin:0 auto 1.25rem;">✓</div>
+          <span style="font-size:0.75rem; color:var(--emerald-700); font-weight:800; letter-spacing:0.05em;">ESTIMATE DISPATCHED &amp; CONTRACTOR MATCHED</span>
+          <h2 style="font-size:1.4rem; font-weight:800; color:var(--navy-authority); margin:0.4rem 0;">Thank You, ${nameVal}!</h2>
+          <p style="font-size:0.88rem; color:var(--text-secondary); max-width:480px; margin:0 auto 1.5rem; line-height:1.5;">
+            Your official CPWD DSR 2026 itemized Construction BoQ has been sent to <strong>${emailVal}</strong>. A licensed regional structural engineer will call you at <strong>${phoneVal}</strong> within 2 business hours.
+          </p>
 
-    let cityMult = 1.0;
-    if (city === 'Mumbai') cityMult = 1.18;
-    else if (city === 'Delhi-NCR') cityMult = 1.08;
-    else if (city === 'Hyderabad') cityMult = 0.96;
+          <div style="background:var(--bg-subtle); border:1px solid var(--border-card); border-radius:8px; padding:1rem; max-width:400px; margin:0 auto 1.75rem; text-align:left;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem; font-size:0.8rem;">
+              <span style="color:var(--text-muted);">Lead Reference ID:</span>
+              <strong style="color:var(--navy-authority);">${refId}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem; font-size:0.8rem;">
+              <span style="color:var(--text-muted);">City &amp; Index:</span>
+              <strong>${escapeHTML(cceLatestCalculation.cityName)}</strong>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
+              <span style="color:var(--text-muted);">Estimated Range:</span>
+              <strong style="color:var(--saffron-700);">${formatINR(cceLatestCalculation.minRange)} – ${formatINR(cceLatestCalculation.maxRange)}</strong>
+            </div>
+          </div>
 
-    const effectiveRate = Math.round(baseRate * cityMult);
-    const totalEst = Math.round(area * effectiveRate);
+          <div style="display:flex; justify-content:center; gap:1rem;">
+            <button type="button" class="btn btn-primary btn-sm" onclick="closeModal(document.getElementById('modalCostEstimatorCallback'))">
+              <span>Close &amp; Return to Terminal</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }
 
-    // CPWD DSR Itemized Quantities Calculation
-    const steelTonnes = (area * 0.0038).toFixed(1);
-    const steelCost = Math.round(steelTonnes * 68500);
+    showToast(`✓ Estimate dispatched to ${emailVal}! Ref: ${refId}`);
+  };
 
-    const cementBags = Math.round(area * 0.42);
-    const cementCost = Math.round(cementBags * 395);
-
-    const sandCft = Math.round(area * 1.85);
-    const sandCost = Math.round(sandCft * 48);
-
-    const blocksUnits = Math.round(area * 3.2);
-    const blocksCost = Math.round(blocksUnits * 42);
-
-    const flooringSqft = Math.round(area * 1.25);
-    const flooringCost = Math.round(flooringSqft * (tier === 'Luxury' ? 140 : 85));
-
-    const plumbingElectrical = Math.round(totalEst * 0.14);
-    const laborSupervision = Math.round(totalEst * 0.22);
-    const miscFinishes = totalEst - (steelCost + cementCost + sandCost + blocksCost + flooringCost + plumbingElectrical + laborSupervision);
-
-    boqTableBody.innerHTML = `
-      <tr>
-        <td><strong>Fe-550D TMT Structural Steel</strong></td>
-        <td>Tata Tiscon / JSW Neosteel (IS 1786)</td>
-        <td><strong>${steelTonnes} Metric Tonnes</strong></td>
-        <td>₹68,500 / Tonne</td>
-        <td><strong style="color:var(--navy-authority);">${formatINR(steelCost)}</strong></td>
-      </tr>
-      <tr>
-        <td><strong>53-Grade OPC / PPC Cement</strong></td>
-        <td>UltraTech Super / ACC Gold (IS 12269)</td>
-        <td><strong>${cementBags} Bags (50kg)</strong></td>
-        <td>₹395 / Bag</td>
-        <td><strong style="color:var(--navy-authority);">${formatINR(cementCost)}</strong></td>
-      </tr>
-      <tr>
-        <td><strong>Triple-Washed M-Sand & Plaster Sand</strong></td>
-        <td>IS 383 Graded Manufactured Sand</td>
-        <td><strong>${sandCft} Cu.Ft</strong></td>
-        <td>₹48 / Cu.Ft</td>
-        <td><strong style="color:var(--navy-authority);">${formatINR(sandCost)}</strong></td>
-      </tr>
-      <tr>
-        <td><strong>Solid Concrete Blocks (6" & 4")</strong></td>
-        <td>High-Density Steam Cured (7.5 N/mm²)</td>
-        <td><strong>${blocksUnits} Units</strong></td>
-        <td>₹42 / Unit</td>
-        <td><strong style="color:var(--navy-authority);">${formatINR(blocksCost)}</strong></td>
-      </tr>
-      <tr>
-        <td><strong>Flooring & Wall Tile Cladding</strong></td>
-        <td>Kajaria / Somany GVT Vitrified 4x2 Tiles</td>
-        <td><strong>${flooringSqft} sq.ft</strong></td>
-        <td>₹85 / sq.ft</td>
-        <td><strong style="color:var(--navy-authority);">${formatINR(flooringCost)}</strong></td>
-      </tr>
-      <tr>
-        <td><strong>Electrical & Sanitary Plumbing</strong></td>
-        <td>Polycab FRLS, Finolex & Astral CPVC/SWR</td>
-        <td>Lump-Sum DSR Package</td>
-        <td>Itemized Trade Rate</td>
-        <td><strong style="color:var(--navy-authority);">${formatINR(plumbingElectrical)}</strong></td>
-      </tr>
-      <tr>
-        <td><strong>Skilled Masonry, Bar-Bending & Labor</strong></td>
-        <td>CPWD Schedule 2026 Manday Standards</td>
-        <td>Turnkey Labor Package</td>
-        <td>22% of Structural Cost</td>
-        <td><strong style="color:var(--navy-authority);">${formatINR(laborSupervision)}</strong></td>
-      </tr>
-    `;
-
-    if (boqTotalCost) boqTotalCost.textContent = formatINR(totalEst);
-    if (boqRatePerSqft) boqRatePerSqft.textContent = `${formatINR(effectiveRate)} / sq.ft`;
-  }
-
-  [boqArea, boqStructure, boqTier, boqCityIndex].forEach(el => {
-    if (el) el.addEventListener('change', calculateBoQ);
-    if (el) el.addEventListener('input', calculateBoQ);
-  });
-  calculateBoQ();
-
-  // Contractor Milestone Escrow Modal
+  // Upgraded Contractor Milestone Escrow Modal tying to current estimate
   const modalContractorEscrow = document.getElementById('modalContractorEscrow');
   const contractorEscrowContent = document.getElementById('contractorEscrowContent');
 
   window.openContractorEscrowModal = function() {
-    const rawArea = boqArea ? boqArea.value : "2500";
-    const area = escapeHTML(rawArea);
-    const total = boqTotalCost ? escapeHTML(boqTotalCost.textContent) : "₹48,75,000";
+    const calc = cceLatestCalculation;
+    const total = formatINR(calc.grandTotal);
+    const area = calc.builtupArea.toLocaleString('en-IN');
+    const city = calc.cityName;
 
-    contractorEscrowContent.innerHTML = `
-      <div style="background:#FFFFFF; border:1px solid var(--border-card); border-radius:12px; padding:2rem;">
-        <div style="border-bottom:2px solid var(--saffron-600); padding-bottom:1rem; margin-bottom:1.5rem;">
-          <span style="font-size:0.75rem; color:var(--saffron-700); font-family:var(--font-main); font-weight:800; letter-spacing:0.05em;">STANDARD INDIAN CONTRACTOR ESCROW DEED</span>
-          <h2 style="font-size:1.4rem; font-weight:800; color:var(--navy-authority); margin:0.3rem 0;">Turnkey Civil Construction & Milestone Escrow Agreement</h2>
-          <div style="font-size:0.8rem; color:var(--text-muted);">ENFORCEABLE UNDER INDIAN CONTRACT ACT, 1872 & CPWD ARBITRATION NORMS</div>
+    const t1 = formatINR(Math.round(calc.grandTotal * 0.15));
+    const t2 = formatINR(Math.round(calc.grandTotal * 0.30));
+    const t3 = formatINR(Math.round(calc.grandTotal * 0.20));
+    const t4 = formatINR(Math.round(calc.grandTotal * 0.20));
+    const t5 = formatINR(Math.round(calc.grandTotal * 0.15));
+
+    if (contractorEscrowContent) {
+      contractorEscrowContent.innerHTML = `
+        <div style="background:#FFFFFF; border:1px solid var(--border-card); border-radius:12px; padding:2rem;">
+          <div style="border-bottom:2px solid var(--saffron-600); padding-bottom:1rem; margin-bottom:1.5rem;">
+            <span style="font-size:0.75rem; color:var(--saffron-700); font-family:var(--font-main); font-weight:800; letter-spacing:0.05em;">STANDARD INDIAN CONTRACTOR ESCROW DEED</span>
+            <h2 style="font-size:1.4rem; font-weight:800; color:var(--navy-authority); margin:0.3rem 0;">Turnkey Civil Construction &amp; Milestone Escrow Agreement</h2>
+            <div style="font-size:0.8rem; color:var(--text-muted);">ENFORCEABLE UNDER INDIAN CONTRACT ACT, 1872 &amp; CPWD ARBITRATION NORMS • ${escapeHTML(city).toUpperCase()}</div>
+          </div>
+
+          <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6; margin-bottom:1.25rem;">
+            This Contractual Escrow Deed protects the <strong>Employer (Homeowner)</strong> and <strong>Contractor</strong> by locking total project funds (<strong>${total}</strong> for ${area} sq.ft) in an escrow bank account, disbursed strictly in 5 tranches upon certification by a licensed structural engineer or architect:
+          </p>
+
+          <div style="display:grid; grid-template-columns:1fr; gap:0.75rem; margin-bottom:1.5rem;">
+            <div style="background:var(--bg-subtle); padding:0.85rem 1rem; border-radius:6px; border:1px solid var(--border-card); display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+              <span><strong>Tranche 1 (15% = ${t1}):</strong> Excavation &amp; Plinth Beam Casting</span>
+              <strong style="color:var(--saffron-700);">Release: Soil testing &amp; plinth verified</strong>
+            </div>
+            <div style="background:var(--bg-subtle); padding:0.85rem 1rem; border-radius:6px; border:1px solid var(--border-card); display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+              <span><strong>Tranche 2 (30% = ${t2}):</strong> RCC Frame, Columns &amp; Roof Slabs</span>
+              <strong style="color:var(--saffron-700);">Release: Cube test report &amp; 28-day curing</strong>
+            </div>
+            <div style="background:var(--bg-subtle); padding:0.85rem 1rem; border-radius:6px; border:1px solid var(--border-card); display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+              <span><strong>Tranche 3 (20% = ${t3}):</strong> Blockwork, Electrical &amp; Plumbing Pipes</span>
+              <strong style="color:var(--saffron-700);">Release: Pressure testing of water lines</strong>
+            </div>
+            <div style="background:var(--bg-subtle); padding:0.85rem 1rem; border-radius:6px; border:1px solid var(--border-card); display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+              <span><strong>Tranche 4 (20% = ${t4}):</strong> Plastering, Vitrified Tiles &amp; Windows</span>
+              <strong style="color:var(--saffron-700);">Release: Level check &amp; water ponding test</strong>
+            </div>
+            <div style="background:var(--bg-subtle); padding:0.85rem 1rem; border-radius:6px; border:1px solid var(--border-card); display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+              <span><strong>Tranche 5 (15% = ${t5}):</strong> Snagging Completion &amp; Key Handover</span>
+              <strong style="color:var(--emerald-600);">Release: 30-day snag rectification + 12-mo DLP</strong>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="window.print()">
+              <span>Print / Save as PDF</span>
+            </button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="showToast('✓ Legally Binding Construction Escrow Agreement generated for ' + '${total}' + '!'); closeModal(document.getElementById('modalContractorEscrow'));">
+              <span>Download Digitally Executable Deed (₹1,999) &rarr;</span>
+            </button>
+          </div>
         </div>
-
-        <p style="font-size:0.88rem; color:var(--text-secondary); line-height:1.6; margin-bottom:1.25rem;">
-          This Contractual Escrow Deed protects the <strong>Employer (Homeowner)</strong> and <strong>Contractor</strong> by locking total project funds (<strong>${total}</strong> for ${area} sq.ft) in an escrow bank account, disbursed strictly in 5 tranches upon certification by a licensed structural engineer or architect:
-        </p>
-
-        <div style="display:grid; grid-template-columns:1fr; gap:0.75rem; margin-bottom:1.5rem;">
-          <div style="background:var(--bg-subtle); padding:0.85rem 1rem; border-radius:6px; border:1px solid var(--border-card); display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
-            <span><strong>Tranche 1 (15%):</strong> Excavation & Plinth Beam Casting</span>
-            <strong style="color:var(--saffron-700);">Release: Soil testing & plinth verified</strong>
-          </div>
-          <div style="background:var(--bg-subtle); padding:0.85rem 1rem; border-radius:6px; border:1px solid var(--border-card); display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
-            <span><strong>Tranche 2 (30%):</strong> RCC Frame, Columns & Roof Slabs</span>
-            <strong style="color:var(--saffron-700);">Release: Cube test report & 28-day curing</strong>
-          </div>
-          <div style="background:var(--bg-subtle); padding:0.85rem 1rem; border-radius:6px; border:1px solid var(--border-card); display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
-            <span><strong>Tranche 3 (20%):</strong> Blockwork, Electrical & Plumbing Pipes</span>
-            <strong style="color:var(--saffron-700);">Release: Pressure testing of water lines</strong>
-          </div>
-          <div style="background:var(--bg-subtle); padding:0.85rem 1rem; border-radius:6px; border:1px solid var(--border-card); display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
-            <span><strong>Tranche 4 (20%):</strong> Plastering, Vitrified Tiles & Windows</span>
-            <strong style="color:var(--saffron-700);">Release: Level check & water ponding test</strong>
-          </div>
-          <div style="background:var(--bg-subtle); padding:0.85rem 1rem; border-radius:6px; border:1px solid var(--border-card); display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
-            <span><strong>Tranche 5 (15%):</strong> Snagging Completion & Key Handover</span>
-            <strong style="color:var(--emerald-600);">Release: 30-day snag rectification + 12-mo DLP</strong>
-          </div>
-        </div>
-
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
-          <button type="button" class="btn btn-secondary btn-sm" onclick="window.print()">
-            <span>Print / Save as PDF</span>
-          </button>
-          <button type="button" class="btn btn-primary btn-sm" onclick="showToast('✓ Legally Binding Construction Escrow Agreement generated!'); closeModal(document.getElementById('modalContractorEscrow'));">
-            <span>Download Digitally Executable Deed (₹1,999) &rarr;</span>
-          </button>
-        </div>
-      </div>
-    `;
+      `;
+    }
 
     openModal(modalContractorEscrow);
   };
@@ -741,6 +1497,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // STATUTORY & FINANCIAL COMPUTATIONAL WORKBENCH (6 INSTITUTIONAL TOOLS)
   // ====================================================================
   function initStatutoryTools() {
+    if (!document.getElementById('statutory-tools')) return;
+
     // 1. Tab Navigation Controls
     const toolTabBtns = document.querySelectorAll('.tool-tab-btn');
     const toolPanels = document.querySelectorAll('.tool-panel');
@@ -748,6 +1506,7 @@ document.addEventListener('DOMContentLoaded', () => {
     toolTabBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const toolKey = btn.getAttribute('data-tool');
+        if (toolKey === 'boq-jump') return;
         toolTabBtns.forEach(b => {
           b.classList.remove('active');
           b.setAttribute('aria-selected', 'false');
@@ -2185,7 +2944,16 @@ document.addEventListener('DOMContentLoaded', () => {
     updateNriTdsCalculator();
   }
 
-  // Initialize Statutory Workbench on DOM Ready
+  // Initialize Statutory Workbench if section exists on current page
   initStatutoryTools();
 
+  // Multi-page deck state initialization
+  const pageSections = document.querySelectorAll('.terminal-page');
+  if (pageSections.length > 1) {
+    if (window.location.hash) {
+      switchTerminalPage(window.location.hash, false);
+    } else {
+      switchTerminalPage(1, false);
+    }
+  }
 });

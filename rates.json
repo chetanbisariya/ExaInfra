@@ -1,0 +1,229 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "metadata": {
+    "title": "ExaInfra Construction Cost & Material Rates Matrix",
+    "version": "2026.2.0",
+    "lastUpdated": "2026-10-25",
+    "standardNorms": "CPWD DSR 2026 & National Building Code (NBC 2016)",
+    "description": "Standard localized construction indices, branded material rates, and engineering thumb rules for residential & commercial building cost modeling in India."
+  },
+  "cities": {
+    "bhopal": {
+      "name": "Bhopal (Central MP)",
+      "region": "Central",
+      "tier": "Tier 2",
+      "mult": 0.96,
+      "desc": "Tier 2 Central Market • Low Freight Premium"
+    },
+    "indore": {
+      "name": "Indore (Commercial MP)",
+      "region": "Central",
+      "tier": "Tier 2",
+      "mult": 0.98,
+      "desc": "Tier 2 Commercial Hub • Moderate Aggregates"
+    },
+    "jabalpur": {
+      "name": "Jabalpur (Mahakoshal)",
+      "region": "Central",
+      "tier": "Tier 2",
+      "mult": 0.94,
+      "desc": "Tier 2 Eastern MP • Abundant Local Sand"
+    },
+    "delhi-ncr": {
+      "name": "Delhi NCR (Gurugram / Noida)",
+      "region": "North",
+      "tier": "Tier 1",
+      "mult": 1.18,
+      "desc": "Tier 1 National Capital • GRAP Green Levies & High Transport"
+    },
+    "lucknow": {
+      "name": "Lucknow (Uttar Pradesh)",
+      "region": "North",
+      "tier": "Tier 2",
+      "mult": 1.02,
+      "desc": "Tier 2 UP Capital • Standard River Sand Belt"
+    },
+    "chandigarh": {
+      "name": "Chandigarh Tri-City",
+      "region": "North",
+      "tier": "Tier 2",
+      "mult": 1.10,
+      "desc": "Tier 2 Northern Hub • Mountain Quarry Freight"
+    },
+    "jaipur": {
+      "name": "Jaipur (Rajasthan)",
+      "region": "North",
+      "tier": "Tier 2",
+      "mult": 1.00,
+      "desc": "Tier 2 Rajasthan Hub • Benchmark Stone & Marble Base"
+    },
+    "mumbai": {
+      "name": "Mumbai MMR (Maharashtra)",
+      "region": "West",
+      "tier": "Tier 1",
+      "mult": 1.38,
+      "desc": "Tier 1 Coastal Metro • High Logistics, Sand Royalty & Labor"
+    },
+    "pune": {
+      "name": "Pune Metropolitan",
+      "region": "West",
+      "tier": "Tier 1",
+      "mult": 1.16,
+      "desc": "Tier 1 Western IT Hub • Moderate Logistics & Labor"
+    },
+    "ahmedabad": {
+      "name": "Ahmedabad (Gujarat)",
+      "region": "West",
+      "tier": "Tier 2",
+      "mult": 1.05,
+      "desc": "Tier 2 Industrial Hub • Abundant Cement & Ceramic Tiles"
+    },
+    "bengaluru": {
+      "name": "Bengaluru (Karnataka)",
+      "region": "South",
+      "tier": "Tier 1",
+      "mult": 1.15,
+      "desc": "Tier 1 Southern Tech Capital • M-Sand Norm & Skilled Labor"
+    },
+    "hyderabad": {
+      "name": "Hyderabad (Telangana)",
+      "region": "South",
+      "tier": "Tier 1",
+      "mult": 1.12,
+      "desc": "Tier 1 South Growth Metro • Proximity to Cement Clusters"
+    },
+    "chennai": {
+      "name": "Chennai (Tamil Nadu)",
+      "region": "South",
+      "tier": "Tier 1",
+      "mult": 1.14,
+      "desc": "Tier 1 Coastal Metro • River Sand Restrictions & Steel Logistics"
+    },
+    "kolkata": {
+      "name": "Kolkata (West Bengal)",
+      "region": "East",
+      "tier": "Tier 1",
+      "mult": 1.06,
+      "desc": "Tier 1 Eastern Hub • Primary Durgapur Steel Corridor"
+    },
+    "patna": {
+      "name": "Patna (Bihar)",
+      "region": "East",
+      "tier": "Tier 2",
+      "mult": 1.00,
+      "desc": "Tier 2 Ganga Belt • Sone Sand Proximity"
+    },
+    "bhubaneswar": {
+      "name": "Bhubaneswar (Odisha)",
+      "region": "East",
+      "tier": "Tier 2",
+      "mult": 0.98,
+      "desc": "Tier 2 Eastern Metro • Direct Steel Plant Proximity"
+    }
+  },
+  "qualities": {
+    "standard": {
+      "name": "Standard / Budget",
+      "cement": "local",
+      "steel": "jsw",
+      "bricks": "clay",
+      "sand": "msand",
+      "flooring": "vitrified_std",
+      "joinery": "sal_upvc",
+      "estimatedRateRange": "₹1,650 – ₹1,850 / sq.ft",
+      "specs": "OPC/PPC Cement, ISI Fe-500D Steel, Red Clay Bricks, Standard Vitrified Tiles (2x2), Sal Wood & UPVC windows."
+    },
+    "premium": {
+      "name": "Premium / Semi-Luxury",
+      "cement": "ultratech",
+      "steel": "tata",
+      "bricks": "aac",
+      "sand": "river",
+      "flooring": "vitrified_gvt",
+      "joinery": "teak_veneer",
+      "estimatedRateRange": "₹2,150 – ₹2,450 / sq.ft",
+      "specs": "UltraTech / ACC Super, Tata Tiscon Fe-550D, AAC Blocks, 4x2 GVT Tiles, Teak Frame & Branded CP fittings."
+    },
+    "luxury": {
+      "name": "Luxury / Ultra",
+      "cement": "ultratech",
+      "steel": "tata",
+      "bricks": "aac",
+      "sand": "river",
+      "flooring": "italian_marble",
+      "joinery": "burma_teak",
+      "estimatedRateRange": "₹3,100 – ₹3,800 / sq.ft",
+      "specs": "UltraTech Super, Tata Tiscon, Italian Marble / Granite, Burma Teak Joinery, Kohler/Grohe Fittings, Acoustic Glazing."
+    }
+  },
+  "floors": {
+    "G": { "count": 1, "label": "Ground Floor (G)", "surcharge": 1.00 },
+    "G+1": { "count": 2, "label": "G + 1 (Duplex)", "surcharge": 1.02 },
+    "G+2": { "count": 3, "label": "G + 2 (Triplex)", "surcharge": 1.05 },
+    "G+3": { "count": 4, "label": "G + 3 (Multi-Unit)", "surcharge": 1.08 },
+    "G+4": { "count": 5, "label": "G + 4 (Stilt+4)", "surcharge": 1.12 }
+  },
+  "materials": {
+    "cement": {
+      "ultratech": { "name": "UltraTech Super / Weather Plus", "ratePerBag": 420, "grade": "53 Grade OPC / PPC (IS 12269)" },
+      "acc": { "name": "ACC Gold Water Shield", "ratePerBag": 410, "grade": "Water Repellent PPC (IS 1489)" },
+      "ambuja": { "name": "Ambuja Plus Roof Special", "ratePerBag": 415, "grade": "High Early Strength PPC" },
+      "dalmia": { "name": "Dalmia DSP High-Grade", "ratePerBag": 390, "grade": "Durable Slag/Portland (IS 455)" },
+      "shree": { "name": "Shree Ultra / Bangur", "ratePerBag": 380, "grade": "Heavy Duty 53 Grade (IS 269)" },
+      "local": { "name": "Local Regional ISI Brand", "ratePerBag": 360, "grade": "Standard ISI Certified PPC" }
+    },
+    "steel": {
+      "tata": { "name": "Tata Tiscon 550D Superlinks", "ratePerKg": 74, "grade": "Fe-550D Primary Rebar (IS 1786)" },
+      "jsw": { "name": "JSW Neosteel Fe-550D", "ratePerKg": 70, "grade": "High Ductility TMT (IS 1786)" },
+      "jindal": { "name": "Jindal Panther Fe-550D", "ratePerKg": 68, "grade": "Refined Primary Steel (IS 1786)" },
+      "kamdhenu": { "name": "Kamdhenu Nxt TMT", "ratePerKg": 66, "grade": "Interlocking Double Ribbed" },
+      "local": { "name": "Local Rolling Mill ISI", "ratePerKg": 60, "grade": "Fe-500 ISI Rebar Standard" }
+    },
+    "bricks": {
+      "clay": { "name": "Red Clay Kiln Bricks (Class 1)", "ratePerUnit": 9.5, "unit": "Bricks", "qtyPerSqft": 20, "grade": "Table Molded Kiln Fired" },
+      "flyash": { "name": "Fly Ash Class-F Bricks", "ratePerUnit": 6.5, "unit": "Bricks", "qtyPerSqft": 20, "grade": "Eco High Compression (IS 12894)" },
+      "aac": { "name": "AAC Lightweight Blocks (6\"/8\")", "ratePerUnit": 62.0, "unit": "Blocks", "qtyPerSqft": 2.4, "grade": "Autoclaved Aerated (IS 2185)" }
+    },
+    "sand": {
+      "river": { "name": "Natural River Plaster Sand", "ratePerCft": 65, "grade": "Triple Washed River Bed Sand" },
+      "msand": { "name": "Triple-Washed M-Sand", "ratePerCft": 45, "grade": "VSI Graded Manufactured Sand (IS 383)" }
+    },
+    "aggregate": {
+      "coarse": { "name": "Coarse Blue Metal Aggregate (10/20mm)", "ratePerCft": 42, "grade": "IS 383 Machine Crushed Granite" }
+    },
+    "flooring": {
+      "ceramic": { "name": "Basic Ceramic Anti-Skid Tiles", "ratePerSqft": 45, "grade": "Regal / Johnson 1x1 & 2x2" },
+      "vitrified_std": { "name": "Vitrified Glazed Tiles (2x2)", "ratePerSqft": 60, "grade": "Somany / Orientbell Nano Polished" },
+      "vitrified_gvt": { "name": "GVT Vitrified Slab Tiles (4x2)", "ratePerSqft": 85, "grade": "Kajaria / Somany High Gloss Vitrified" },
+      "granite": { "name": "Polished Granite Slabs", "ratePerSqft": 140, "grade": "Black Galaxy / Tan Brown Mirror Polish" },
+      "italian_marble": { "name": "Imported Italian Marble", "ratePerSqft": 280, "grade": "Dyna / Bottochino Diamond Polish" }
+    },
+    "joinery": {
+      "sal_upvc": { "name": "Sal Wood Frame + Flush Doors / UPVC", "ratePerSqft": 280, "grade": "Prominance UPVC + Waterproof Flush Doors" },
+      "meranti_upvc": { "name": "Malaysian Meranti Wood + UPVC", "ratePerSqft": 340, "grade": "Seasoned Meranti Timber + 2.5 Track UPVC" },
+      "teak_veneer": { "name": "CP Teak Frame + Teak Veneer & UPVC", "ratePerSqft": 450, "grade": "CP Teak Main Door + Kommerling UPVC" },
+      "burma_teak": { "name": "Solid Burma Teak Joinery & Polish", "ratePerSqft": 750, "grade": "100% Seasoned Burma Teak & Architectural Brass" }
+    }
+  },
+  "thumbRules": {
+    "cementBagsPerSqft": 0.42,
+    "steelKgPerSqft": 4.0,
+    "sandCftPerSqft": 2.0,
+    "coarseAggCftPerSqft": 1.35,
+    "flooringSqftMult": 1.15,
+    "joinerySqftMult": 0.18,
+    "civilLaborBaseRate": 340,
+    "mepFinishingBaseRate": {
+      "standard": 220,
+      "premium": 310,
+      "luxury": 440
+    }
+  },
+  "baselineNorms": {
+    "cementPct": 16,
+    "steelPct": 24,
+    "masonrySandAggPct": 14,
+    "finishingPct": 20,
+    "laborSupervisionPct": 26
+  }
+}
