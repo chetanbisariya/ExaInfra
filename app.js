@@ -335,11 +335,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // 4. WEB TERMINAL MULTI-PAGE ROUTER & DECK CONTROLLER
   // ====================================================================
   const TERMINAL_PAGES = [
-    { page: 1, id: 'build-boq', url: 'index.html', label: 'PAGE 1 OF 4 • 🏗️ FLAGSHIP COST ESTIMATOR & BOQ', shortTitle: 'Cost Estimator & BoQ' },
-    { page: 2, id: 'legal-radar', url: 'property-radar.html', label: 'PAGE 2 OF 4 • 🛡️ PROPERTY SCAM & TITLE RADAR', shortTitle: 'Property Scam Radar' },
-    { page: 3, id: 'statutory-tools', url: 'statutory-tools.html', label: 'PAGE 3 OF 4 • ⚙️ STATUTORY & TAX WORKBENCH (10 TOOLS)', shortTitle: 'Statutory Workbench' },
-    { page: 4, id: 'contact', url: 'contact.html', label: 'PAGE 4 OF 4 • ✉️ INSTITUTIONAL ADVISORY DESK', shortTitle: 'Advisory Desk' },
-    { page: 5, id: 'regulatory-framework', url: 'regulatory-framework.html', label: 'STATUTORY REPOSITORY • ⚖️ REGULATORY FRAMEWORK', shortTitle: 'Regulatory Law' }
+    { page: 1, id: 'build-boq', url: 'index.html', label: '🏗️ FLAGSHIP COST ESTIMATOR & BOQ', shortTitle: 'Cost Estimator & BoQ' },
+    { page: 2, id: 'legal-radar', url: 'property-radar.html', label: '🛡️ PROPERTY SCAM & TITLE RADAR', shortTitle: 'Property Scam Radar' },
+    { page: 3, id: 'statutory-tools', url: 'statutory-tools.html', label: '⚙️ STATUTORY & TAX WORKBENCH (10 TOOLS)', shortTitle: 'Statutory Workbench' },
+    { page: 4, id: 'contact', url: 'contact.html', label: '✉️ INSTITUTIONAL ADVISORY DESK', shortTitle: 'Advisory Desk' },
+    { page: 5, id: 'regulatory-framework', url: 'regulatory-framework.html', label: '⚖️ REGULATORY FRAMEWORK', shortTitle: 'Regulatory Law' }
   ];
 
   const MULTI_PAGE_ROUTES = {

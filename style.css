@@ -3170,6 +3170,10 @@ a.contact-method-value:hover {
   gap: 0.4rem;
 }
 
+.nav-contact-btn.active {
+  box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px var(--saffron-500);
+}
+
 
 /* ====================================================================
    PILLAR 5: INSTITUTIONAL REAL ESTATE & ASSET TOOLS (SOVEREIGN THEME)
