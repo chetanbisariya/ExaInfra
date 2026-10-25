@@ -1371,7 +1371,7 @@ button, input, select, textarea, a {
 
 .cce-grid {
   display: grid;
-  grid-template-columns: 1.05fr 1.15fr;
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
   align-items: start;
 }
@@ -1386,8 +1386,6 @@ button, input, select, textarea, a {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  position: sticky;
-  top: 85px;
 }
 
 .cce-card {
@@ -2066,39 +2064,35 @@ button, input, select, textarea, a {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 0.9rem;
+  font-size: 0.86rem;
   min-width: 680px;
 }
 
 .boq-table th {
   background: #F8FAFC;
-  padding: 1rem 1.25rem;
+  padding: 0.9rem 1rem;
   color: var(--navy-authority);
   font-family: var(--font-main);
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-size: 0.74rem;
+  font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  border-bottom: 1px solid var(--border-card);
+  border-bottom: 2px solid #E2E8F0;
+  white-space: nowrap;
 }
 
-.boq-table th:nth-child(4),
-.boq-table th:nth-child(5),
-.boq-table th:nth-child(6) {
-  text-align: right;
-}
+.boq-table th:nth-child(1), .boq-table td:nth-child(1) { width: 23%; font-weight: 700; color: var(--navy-authority); }
+.boq-table th:nth-child(2), .boq-table td:nth-child(2) { width: 29%; font-size: 0.81rem; color: #475569; }
+.boq-table th:nth-child(3), .boq-table td:nth-child(3) { width: 17%; font-weight: 600; white-space: nowrap; }
+.boq-table th:nth-child(4), .boq-table td:nth-child(4) { width: 13%; text-align: right; white-space: nowrap; font-family: var(--font-main); }
+.boq-table th:nth-child(5), .boq-table td:nth-child(5) { width: 12%; text-align: right; white-space: nowrap; font-family: var(--font-main); font-weight: 800; color: var(--navy-authority); }
+.boq-table th:nth-child(6), .boq-table td:nth-child(6) { width: 6%; text-align: right; font-weight: 700; color: var(--text-muted); font-size: 0.78rem; }
 
 .boq-table td {
-  padding: 0.9rem 1.25rem;
-  border-bottom: 1px solid var(--border-card);
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-.boq-table td:nth-child(4),
-.boq-table td:nth-child(5),
-.boq-table td:nth-child(6) {
-  text-align: right;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #F1F5F9;
+  vertical-align: middle;
+  line-height: 1.45;
 }
 
 .boq-table tr:hover td {
@@ -2111,6 +2105,7 @@ button, input, select, textarea, a {
   color: var(--navy-authority);
   border-top: 2px solid var(--navy-authority);
   font-size: 0.92rem;
+  padding: 1rem;
 }
 
 /* Thumb Rules Box */
@@ -2118,31 +2113,34 @@ button, input, select, textarea, a {
   background: #F8FAFC;
   border: 1px solid var(--border-card);
   border-radius: var(--radius-md);
-  padding: 1.25rem 1.5rem;
+  padding: 1.35rem 1.5rem;
 }
 
 .cce-thumb-rules-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.6rem 1.5rem;
+  gap: 0.85rem 2rem;
 }
 
 .cce-tr-item {
   display: flex;
   justify-content: space-between;
-  font-size: 0.78rem;
-  padding: 0.2rem 0;
+  align-items: center;
+  font-size: 0.81rem;
+  padding: 0.35rem 0;
   border-bottom: 1px dashed #E2E8F0;
+  line-height: 1.4;
 }
 
 .cce-tr-key {
-  color: var(--text-muted);
+  color: #475569;
   font-weight: 600;
 }
 
 .cce-tr-val {
   color: var(--navy-authority);
   font-weight: 700;
+  white-space: nowrap;
 }
 
 /* Milestone Escrow Steps Grid */
@@ -2159,7 +2157,7 @@ button, input, select, textarea, a {
   font-weight: 800;
   font-family: var(--font-main);
   background: var(--emerald-light);
-  padding: 0.2rem 0.55rem;
+  padding: 0.25rem 0.65rem;
   border-radius: 4px;
 }
 
@@ -2177,6 +2175,9 @@ button, input, select, textarea, a {
   border-radius: var(--radius-sm);
   text-align: left;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .step-pct {
@@ -2209,7 +2210,7 @@ button, input, select, textarea, a {
 }
 
 /* ====================================================================
-   LEFT COLUMN ENHANCEMENT: Engineering, QA, Legal & VE Cards
+   LEFT COLUMN ENHANCEMENT: Engineering, QA & VE Cards
    ==================================================================== */
 
 /* Live Site Material Quantities Grid (Card 5) */
@@ -2220,18 +2221,19 @@ button, input, select, textarea, a {
 }
 
 .cce-lq-item {
-  background: var(--bg-subtle);
-  border: 1px solid var(--border-card);
-  border-radius: var(--radius-sm);
-  padding: 0.85rem 1rem;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
   display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  transition: transform var(--transition-fast), border-color var(--transition-fast);
+  align-items: center;
+  gap: 0.85rem;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .cce-lq-item:hover {
   border-color: #CBD5E1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
   transform: translateY(-1px);
 }
 
@@ -2240,12 +2242,15 @@ button, input, select, textarea, a {
 }
 
 .cce-lq-icon {
-  font-size: 1.35rem;
-  line-height: 1;
-  padding: 0.35rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
   background: #FFFFFF;
-  border-radius: 6px;
-  border: 1px solid var(--border-card);
+  border: 1px solid #E2E8F0;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
@@ -2257,60 +2262,67 @@ button, input, select, textarea, a {
 }
 
 .cce-lq-lbl {
-  font-size: 0.73rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--text-muted);
+  color: #64748B;
+  line-height: 1.3;
 }
 
 .cce-lq-val {
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   font-weight: 800;
   color: var(--navy-authority);
   font-family: var(--font-main);
   line-height: 1.25;
+  margin: 0.05rem 0;
 }
 
 .cce-lq-sub {
-  font-size: 0.72rem;
+  font-size: 0.73rem;
   color: #64748B;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 /* IS 456 Structural Standards Table (Card 6) */
 .cce-standards-table-wrap {
   overflow-x: auto;
-  border: 1px solid var(--border-card);
-  border-radius: var(--radius-sm);
-  margin-bottom: 1rem;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  margin-bottom: 0.85rem;
 }
 
 .cce-spec-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   text-align: left;
 }
 
 .cce-spec-table th {
   background: #F1F5F9;
-  padding: 0.65rem 0.85rem;
+  padding: 0.75rem 0.95rem;
   font-weight: 800;
   color: var(--navy-authority);
-  border-bottom: 1px solid var(--border-card);
-  font-size: 0.75rem;
-  letter-spacing: 0.02em;
+  border-bottom: 1px solid #E2E8F0;
+  font-size: 0.74rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .cce-spec-table td {
-  padding: 0.65rem 0.85rem;
+  padding: 0.75rem 0.95rem;
   border-bottom: 1px solid #F1F5F9;
   color: #334155;
+  vertical-align: middle;
+  line-height: 1.45;
 }
 
 .cce-spec-table tr:last-child td {
   border-bottom: none;
+}
+
+.cce-spec-table tr:hover td {
+  background: #F8FAFC;
 }
 
 .badge-mix {
@@ -2343,28 +2355,29 @@ button, input, select, textarea, a {
 .cce-standards-callout {
   background: #FFFBEB;
   border: 1px solid #FDE68A;
-  border-radius: var(--radius-sm);
-  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  padding: 0.95rem 1.15rem;
+  margin-top: 0.75rem;
 }
 
 .callout-pill {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   color: #92400E;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.45rem;
 }
 
 .cce-bullet-list {
   margin: 0;
-  padding-left: 1.15rem;
-  font-size: 0.79rem;
+  padding-left: 1.25rem;
+  font-size: 0.81rem;
   color: #78350F;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .cce-bullet-list li {
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.4rem;
 }
 
 .cce-bullet-list li:last-child {
@@ -2375,27 +2388,32 @@ button, input, select, textarea, a {
 .cce-qa-checklist {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.75rem;
 }
 
 .cce-qa-item {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
+  gap: 0.85rem;
   background: #F8FAFC;
-  border: 1px solid var(--border-card);
-  border-radius: var(--radius-sm);
-  padding: 0.75rem 0.95rem;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 0.95rem 1.15rem;
+  transition: border-color var(--transition-fast);
+}
+
+.cce-qa-item:hover {
+  border-color: #CBD5E1;
 }
 
 .cce-qa-status {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-weight: 800;
   flex-shrink: 0;
   margin-top: 2px;
@@ -2407,85 +2425,27 @@ button, input, select, textarea, a {
   border: 1px solid #86EFAC;
 }
 
-.cce-qa-text {
-  font-size: 0.81rem;
-  color: #334155;
-  line-height: 1.45;
-}
-
-.cce-qa-text strong {
-  color: var(--navy-authority);
-}
-
-/* Municipal Sanctions Grid (Card 8) */
-.cce-sanctions-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.85rem;
-}
-
-.cce-sanc-card {
-  background: #FFFFFF;
-  border: 1px solid var(--border-card);
-  border-radius: var(--radius-sm);
-  padding: 0.85rem 1rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
-}
-
-.cce-sanc-header {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  margin-bottom: 0.35rem;
-  font-size: 0.84rem;
-  color: var(--navy-authority);
-}
-
-.cce-sanc-icon {
-  font-size: 1rem;
-}
-
-.cce-sanc-desc {
-  font-size: 0.77rem;
-  color: #64748B;
-  line-height: 1.45;
-  margin: 0;
-}
-
-/* Contractor Legal Clauses (Card 9) */
-.cce-legal-clauses-list {
+.cce-qa-content {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.25rem;
+  min-width: 0;
 }
 
-.cce-clause-item {
-  border: 1px solid #E2E8F0;
-  border-left: 3px solid var(--saffron-500);
-  background: #F8FAFC;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  padding: 0.75rem 1rem;
-}
-
-.cce-clause-tag {
-  font-size: 0.68rem;
+.cce-qa-title {
+  font-size: 0.88rem;
   font-weight: 800;
-  letter-spacing: 0.05em;
-  color: var(--saffron-700);
-  margin-bottom: 0.25rem;
-}
-
-.cce-clause-body {
-  font-size: 0.8rem;
-  color: #334155;
-  line-height: 1.45;
-}
-
-.cce-clause-body strong {
   color: var(--navy-authority);
+  line-height: 1.35;
 }
 
-/* Value Engineering Tips Grid (Card 10) */
+.cce-qa-desc {
+  font-size: 0.81rem;
+  color: #475569;
+  line-height: 1.55;
+}
+
+/* Value Engineering Tips Grid (Card 8) */
 .cce-ve-tips-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -2495,27 +2455,32 @@ button, input, select, textarea, a {
 .cce-ve-tip {
   background: #F0FDF4;
   border: 1px solid #BBF7D0;
-  border-radius: var(--radius-sm);
-  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  padding: 1rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
 .cce-ve-head {
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  margin-bottom: 0.35rem;
-  font-size: 0.83rem;
+  font-size: 0.88rem;
+  font-weight: 800;
   color: #166534;
+  line-height: 1.3;
 }
 
 .cce-ve-icon {
-  font-size: 1rem;
+  font-size: 1.05rem;
+  flex-shrink: 0;
 }
 
 .cce-ve-text {
-  font-size: 0.77rem;
+  font-size: 0.8rem;
   color: #15803D;
-  line-height: 1.45;
+  line-height: 1.55;
   margin: 0;
 }
 
